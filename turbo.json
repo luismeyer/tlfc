@@ -1,0 +1,15 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "compile": {
+      "inputs": ["src/**/*.ts"],
+      "outputs": ["lib/**/*"]
+    },
+    "compile:watch": {
+      "inputs": ["src/**/*.ts"],
+      "outputs": ["lib/**/*"],
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

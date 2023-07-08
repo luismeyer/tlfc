@@ -1,0 +1,17 @@
+{
+  "name": "tsls",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "scripts": {
+    "compile": "turbo compile",
+    "compile:watch": "turbo compile:watch"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "turbo": "^1.10.7"
+  }
+}

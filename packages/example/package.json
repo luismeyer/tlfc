@@ -1,0 +1,7 @@
+{
+  "name": "@tsls/example",
+  "devDependencies": {
+    "zod": "^3.21.4",
+    "@types/node": "^20.4.1"
+  }
+}
