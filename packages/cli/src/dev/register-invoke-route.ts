@@ -1,10 +1,7 @@
 import { Application } from "express";
-import { Lambda as RunLambda } from "runl";
 import { ZodObject, ZodRawShape } from "zod";
 
 import { Lambda } from "@tsls/core";
-
-import { createRunLambda } from "./create-run-lambda";
 
 export function registerInvokeRoute<
   RequestSchema extends ZodObject<ZodRawShape>,
@@ -14,12 +11,6 @@ export function registerInvokeRoute<
 
   console.info(`register invoke route: ${path}`);
 
-  const functionPool: Record<string, RunLambda | undefined> = {};
-
-  functions.forEach((lambda) => {
-    functionPool[lambda.functionName] = createRunLambda(lambda);
-  });
-
   app.post(path, async (request, response) => {
     const { headers, body, params } = request;
 
@@ -28,13 +19,15 @@ export function registerInvokeRoute<
     const event = body.length > 0 ? JSON.parse(body.toString("utf8")) : {};
 
     try {
-      const lambda = functionPool[params.functionName];
+      const lambda = functions.find(
+        (lambda) => lambda.functionName === params.functionName
+      );
 
       if (!lambda) {
         throw new Error(`Missing lambda '${params.functionName}' in pool`);
       }
 
-      const resultPromise = lambda.execute(event);
+      const resultPromise = lambda.handler(event);
 
       // Don't await async lambda invocations
       if (invocationType === "Event") {

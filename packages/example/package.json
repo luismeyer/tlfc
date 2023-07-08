@@ -1,7 +1,15 @@
 {
   "name": "@tsls/example",
+  "scripts": {
+    "compile": "tsc --build",
+    "compile:watch": "tsc --build --watch",
+    "dev": "node lib/dev.js",
+    "invoke": "node lib/test-client.js"
+  },
   "devDependencies": {
+    "@types/node": "^20.4.1",
+    "typescript": "^5.1.6",
     "zod": "^3.21.4",
-    "@types/node": "^20.4.1"
+    "@tsls/cli": "*"
   }
 }

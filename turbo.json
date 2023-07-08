@@ -2,11 +2,12 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "compile": {
-      "inputs": ["src/**/*.ts"],
+      "dependsOn": ["^compile"],
+      "inputs": ["src/**/*"],
       "outputs": ["lib/**/*"]
     },
     "compile:watch": {
-      "inputs": ["src/**/*.ts"],
+      "inputs": ["src/**/*"],
       "outputs": ["lib/**/*"],
       "cache": false,
       "persistent": true

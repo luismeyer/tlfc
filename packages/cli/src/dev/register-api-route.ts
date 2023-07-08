@@ -4,23 +4,20 @@ import { ZodObject, ZodRawShape } from "zod";
 
 import { Lambda } from "@tsls/core";
 
-import { createRunLambda } from "./create-run-lambda";
 import { getQueryStringParameters } from "./get-query-string-parameters";
 import { getRequestHeaders } from "./get-request-headers";
 
 export function registerApiRoute<
   RequestSchema extends ZodObject<ZodRawShape>,
   ResponseSchema extends ZodObject<ZodRawShape>
->(app: Application, option: Lambda<RequestSchema, ResponseSchema>) {
-  const path = `/${option.functionName}`;
+>(app: Application, lambda: Lambda<RequestSchema, ResponseSchema>) {
+  const path = `/${lambda.functionName}`;
 
   console.info(`register api route: ${path}`);
 
   app.all(path, async (request, response) => {
-    const lambda = createRunLambda(option);
-
     try {
-      const result = await lambda.execute<APIGatewayProxyResult>({
+      const result = (await lambda.handler({
         ...getQueryStringParameters(request),
         ...getRequestHeaders(request),
         requestContext: {
@@ -31,9 +28,9 @@ export function registerApiRoute<
         },
         path: request.path,
         httpMethod: request.method,
-        body: Buffer.from(JSON.stringify(request.body)).toString(`base64`),
+        body: JSON.stringify(request.body),
         isBase64Encoded: false,
-      });
+      })) as APIGatewayProxyResult;
 
       response
         .type("json")
