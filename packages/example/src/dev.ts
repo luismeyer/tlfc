@@ -1,4 +1,4 @@
 import { dev } from "@tsls/cli";
-import testHandler from "./test-server";
+import testHandler from "./server";
 
 dev([testHandler]);

@@ -3,13 +3,17 @@
   "scripts": {
     "compile": "tsc --build",
     "compile:watch": "tsc --build --watch",
-    "dev": "node lib/dev.js",
-    "invoke": "node lib/test-client.js"
+    "dev": "concurrently 'node lib/dev.js' 'vite'",
+    "invoke": "node lib/test-client.js",
+    "build": "vite build"
   },
   "devDependencies": {
+    "@tsls/cli": "*",
+    "@tsls/core": "*",
     "@types/node": "^20.4.1",
+    "concurrently": "^8.2.0",
     "typescript": "^5.1.6",
-    "zod": "^3.21.4",
-    "@tsls/cli": "*"
+    "vite": "^4.4.0",
+    "zod": "^3.21.4"
   }
 }

@@ -7,8 +7,8 @@
     "strict": true,
     "module": "CommonJS",
     "target": "ESNext",
-    "moduleResolution": "NodeNext",
     "declaration": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "Node"
   }
 }

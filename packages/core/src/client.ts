@@ -1,9 +1,10 @@
 import { z, ZodObject, ZodRawShape } from "zod";
 
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
-import { readDevConfig } from "@tsls/shared";
+import { readConfig } from "@tsls/shared";
+import { LambdaOptions } from "./shared";
 
-const devConfig = readDevConfig();
+const { api, invoke } = readConfig();
 
 export type CallOptions = {
   forceFetch?: boolean;
@@ -26,10 +27,9 @@ function createCallWithAWS<
 ): Call<RequestSchema, ResponseSchema> {
   console.info(`Creating call with AWS for ${functionName}`);
 
-  // TODO: make client configurable
   const client = new LambdaClient({
-    region: process.env.REGION ?? "eu-central-1",
-    endpoint: devConfig?.invokeEndpoint,
+    region: process.env.REGION,
+    endpoint: invoke.endpoint,
   });
 
   return async function (request: z.infer<RequestSchema>) {
@@ -69,7 +69,7 @@ function createCallWithFetch<
     console.info(`Fetch invoking lambda`);
 
     // TODO: base url configurable
-    const result = await fetch(`${devConfig?.apiEndpoint}/${functionName}`, {
+    const result = await fetch(`${api.endpoint}/${functionName}`, {
       method: "POST",
       body: JSON.stringify(request),
       headers: {
@@ -90,11 +90,13 @@ function createCallWithFetch<
 export function createLambdaCall<
   RequestSchema extends ZodObject<ZodRawShape>,
   ResponseSchema extends ZodObject<ZodRawShape>
->(
-  responseSchema: ResponseSchema,
-
-  functionName: string
-): Call<RequestSchema, ResponseSchema> {
+>({
+  functionName,
+  responseSchema,
+}: LambdaOptions<RequestSchema, ResponseSchema>): Call<
+  RequestSchema,
+  ResponseSchema
+> {
   return function (request: z.infer<RequestSchema>, { forceFetch } = {}) {
     let call = createCallWithFetch(responseSchema, functionName);
 

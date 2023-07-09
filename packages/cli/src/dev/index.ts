@@ -5,12 +5,14 @@ import express from "express";
 import { ZodObject, ZodRawShape } from "zod";
 
 import { Lambda } from "@tsls/core";
-import { storeDevConfig } from "@tsls/shared";
+import { readConfig } from "@tsls/shared";
 
 import { registerApiRoute } from "./register-api-route";
 import { registerInvokeRoute } from "./register-invoke-route";
 
-async function build<
+const { api, invoke } = readConfig();
+
+async function buildWatch<
   RequestSchema extends ZodObject<ZodRawShape>,
   ResponseSchema extends ZodObject<ZodRawShape>
 >(lambdas: Lambda<RequestSchema, ResponseSchema>[]) {
@@ -32,14 +34,10 @@ async function build<
   }
 }
 
-export async function dev<
+function createInvokeServer<
   RequestSchema extends ZodObject<ZodRawShape>,
   ResponseSchema extends ZodObject<ZodRawShape>
 >(lambdas: Lambda<RequestSchema, ResponseSchema>[]) {
-  await build(lambdas);
-
-  const host = "localhost";
-
   // this app handles aws-sdk invocations
   const invokeApp = express();
   invokeApp.use(raw());
@@ -47,6 +45,15 @@ export async function dev<
 
   registerInvokeRoute(invokeApp, lambdas);
 
+  return invokeApp.listen(invoke.port, invoke.host, () => {
+    console.info(`Invocation Lambdas at ${invoke.endpoint}`);
+  });
+}
+
+function createApiServer<
+  RequestSchema extends ZodObject<ZodRawShape>,
+  ResponseSchema extends ZodObject<ZodRawShape>
+>(lambdas: Lambda<RequestSchema, ResponseSchema>[]) {
   // this app handles fetch invocations
   const apiApp = express();
   apiApp.use(cors());
@@ -56,21 +63,19 @@ export async function dev<
     registerApiRoute(apiApp, lambda);
   });
 
-  const invokePort = 3002;
-  const invokeEndpoint = `http://${host}:${invokePort}`;
-
-  const invocationServer = invokeApp.listen(invokePort, host, () => {
-    console.info(`Invocation Lambdas at ${invokeEndpoint}`);
+  return apiApp.listen(api.port, api.host, () => {
+    console.info(`Api Lambdas at ${api.endpoint}`);
   });
+}
 
-  const apiPort = 3000;
-  const apiEndpoint = `http://${host}:${apiPort}`;
+export async function dev<
+  RequestSchema extends ZodObject<ZodRawShape>,
+  ResponseSchema extends ZodObject<ZodRawShape>
+>(lambdas: Lambda<RequestSchema, ResponseSchema>[]) {
+  await buildWatch(lambdas);
 
-  const proxyServer = apiApp.listen(apiPort, host, () => {
-    console.info(`Api Lambdas at ${apiEndpoint}`);
-  });
-
-  storeDevConfig({ invokeEndpoint, apiEndpoint });
+  const invokeServer = createInvokeServer(lambdas);
+  const apiServer = createApiServer(lambdas);
 
   let isExiting = false;
 
@@ -83,8 +88,8 @@ export async function dev<
 
     console.info("stopping dev servers...");
 
-    invocationServer.close();
-    proxyServer.close();
+    invokeServer.close();
+    apiServer.close();
 
     process.exit(0);
   };

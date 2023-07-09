@@ -1,5 +1,6 @@
 import { APIGatewayEvent } from "aws-lambda";
 import { z, ZodObject, ZodRawShape } from "zod";
+import { LambdaOptions } from "./shared";
 
 export type LambdaHandler = (event: APIGatewayEvent | unknown) => unknown;
 
@@ -24,9 +25,7 @@ export function createLambdaHandler<
     request: z.infer<RequestSchema>
   ) => Promise<z.infer<ResponseSchema>>,
 
-  requestSchema: RequestSchema,
-
-  functionName: string
+  { functionName, requestSchema }: LambdaOptions<RequestSchema, ResponseSchema>
 ): LambdaHandler {
   console.info("Creating lambda Wrapper for ", functionName);
 
