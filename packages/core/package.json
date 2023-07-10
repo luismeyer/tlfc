@@ -8,10 +8,10 @@
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.363.0",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "@tsls/shared": "*"
   },
   "devDependencies": {
-    "@tsls/shared": "*",
     "@types/aws-lambda": "^8.10.119",
     "@types/node": "^20.4.1",
     "typescript": "^5.1.6"

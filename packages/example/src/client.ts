@@ -1,5 +1,4 @@
 import { createLambdaCall } from "@tsls/core";
-import testHandler from "./server";
 import { lambdaOptions } from "./shared";
 
 const button = document.getElementById("button")!;

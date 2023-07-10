@@ -6,7 +6,6 @@
     "compile": "tsc --build",
     "compile:watch": "tsc --build --watch"
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/node": "^20.4.1",
     "typescript": "^5.1.6"
