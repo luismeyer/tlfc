@@ -7,7 +7,7 @@ import { createLambdaFunction } from "./create-lambda-function";
 import { build } from "./esbuild";
 
 class AwsStack extends Stack {
-  constructor(app: App, id: string, lambdas: Lambda[]) {
+  constructor(app: App, id: string, lambdaOptions: Lambda[]) {
     super(app, id);
 
     const api = new RestApi(this, "tSlsApi", {
@@ -15,7 +15,7 @@ class AwsStack extends Stack {
       description: "RestApi which holds all tSLS endpoints",
     });
 
-    lambdas.forEach((lambda) => createLambdaFunction(this, lambda, api));
+    lambdaOptions.forEach((lambda) => createLambdaFunction(this, lambda, api));
   }
 }
 

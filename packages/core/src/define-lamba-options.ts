@@ -1,7 +1,6 @@
 import { ZodObject, ZodRawShape } from "zod";
 
 export type EndpointType = "GET" | "POST";
-export const DEFAULT_ENDPOINT_TYPE: EndpointType = "POST";
 
 export type LambdaOptions<
   RequestSchema extends ZodObject<ZodRawShape>,
@@ -13,6 +12,7 @@ export type LambdaOptions<
   /**
    * Determine the HTTP method used to invoke the lambda.
    * If set to 'GET' the lambda input will be parsed from the query params.
+   * If endpointType is not set, the lambda will not be exposed via HTTP.
    */
   endpointType?: EndpointType;
 };

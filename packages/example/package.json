@@ -1,19 +1,19 @@
 {
   "name": "@tsls/example",
   "scripts": {
-    "client:node": "node node-client/main.mjs",
-    "client:vite": "vite",
+    "client": "vite",
     "compile": "tsc -p tsconfig.node.json",
     "compile:watch": "tsc -p tsconfig.node.json --watch",
-    "deploy": "npx cdk deploy --app 'node scripts/deploy.mjs'",
-    "dev": "node scripts/dev.mjs"
+    "deploy": "npx cdk deploy --app 'node -r @swc-node/register scripts/deploy.ts'",
+    "synth": "npx cdk synth --app 'node -r @swc-node/register scripts/deploy.ts'",
+    "dev": "node -r @swc-node/register scripts/dev.ts"
   },
   "devDependencies": {
+    "@swc-node/register": "^1.6.6",
     "@tsls/core": "*",
-    "@tsls/utils": "*",
+    "@tsls/tools": "*",
     "@types/node": "^20.4.1",
     "cdk": "^2.87.0",
-    "concurrently": "^8.2.0",
     "typescript": "^5.1.6",
     "vite": "^4.4.0",
     "zod": "^3.21.4"

@@ -5,6 +5,7 @@ import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 import { Lambda } from "@tsls/core";
 
 import { lambdaUploadDir } from "./esbuild";
+import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 
 export const handlerFileName = "index";
 const handler = `${handlerFileName}.handler`;
@@ -23,13 +24,27 @@ export const createLambdaFunction = (
     functionName,
     handler,
     code: Code.fromAsset(uploadDir),
+    environment: {
+      LAMBDA_ENV: "cloud",
+    },
   });
 
-  const integration = new LambdaIntegration(lambda);
+  if (options.endpointType && restApi) {
+    const integration = new LambdaIntegration(lambda);
 
-  restApi.root
-    .addResource(functionName, {
-      defaultCorsPreflightOptions: { allowOrigins: Cors.ALL_ORIGINS },
-    })
-    .addMethod(options.endpointType, integration);
+    restApi.root
+      .addResource(functionName, {
+        defaultCorsPreflightOptions: { allowOrigins: Cors.ALL_ORIGINS },
+      })
+      .addMethod(options.endpointType, integration);
+  }
+
+  // TODO: use more granular permissions
+  const statement = new PolicyStatement();
+  statement.addActions("lambda:InvokeFunction");
+  statement.addResources("*");
+
+  lambda.addToRolePolicy(statement);
+
+  return lambda;
 };

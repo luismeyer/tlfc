@@ -3,7 +3,7 @@ import { z, ZodObject, ZodRawShape } from "zod";
 import { readConfig } from "@tsls/shared";
 
 import { devLog } from "../logger";
-import { DEFAULT_ENDPOINT_TYPE, EndpointType } from "../shared";
+import { EndpointType } from "../define-lamba-options";
 import { Call } from "./create-lambda-call";
 
 function createUrl<RequestSchema extends ZodObject<ZodRawShape>>(
@@ -41,7 +41,7 @@ export function createFetchCall<
 >(
   responseSchema: ResponseSchema,
   functionName: string,
-  endpointType: EndpointType = DEFAULT_ENDPOINT_TYPE
+  endpointType: EndpointType
 ): Call<RequestSchema, ResponseSchema> {
   devLog(`Creating call with Fetch for ${functionName}`);
 

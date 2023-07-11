@@ -5,5 +5,5 @@
     "outDir": "lib"
   },
   "include": ["./server"],
-  "references": [{ "path": "../utils" }, { "path": "../core" }]
+  "references": [{ "path": "../tools" }, { "path": "../core" }]
 }

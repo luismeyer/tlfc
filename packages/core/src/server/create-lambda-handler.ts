@@ -7,7 +7,7 @@ import {
 } from "./lambda-response";
 import { devLog } from "../logger";
 import { parseEvent } from "./parse-event";
-import { LambdaOptions } from "../shared";
+import { LambdaOptions } from "../define-lamba-options";
 
 export type LambdaHandler = (event: APIGatewayEvent | unknown) => unknown;
 

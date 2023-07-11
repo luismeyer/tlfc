@@ -1,6 +1,6 @@
 import { z, ZodObject, ZodRawShape } from "zod";
 
-import { DEFAULT_ENDPOINT_TYPE, EndpointType, LambdaOptions } from "../shared";
+import { EndpointType, LambdaOptions } from "../define-lamba-options";
 import { createLambdaHandler, LambdaHandler } from "./create-lambda-handler";
 
 export type Lambda = {
@@ -8,7 +8,7 @@ export type Lambda = {
   functionName: string;
   handler: LambdaHandler;
   fullFilePath: string;
-  endpointType: EndpointType;
+  endpointType?: EndpointType;
 };
 
 function getCallerFile() {
@@ -54,6 +54,6 @@ export function createLambda<
     functionName: options.functionName,
     handler: createLambdaHandler(handler, options),
     fullFilePath: getCallerFile(),
-    endpointType: options.endpointType ?? DEFAULT_ENDPOINT_TYPE,
+    endpointType: options.endpointType,
   };
 }
