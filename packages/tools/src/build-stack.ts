@@ -1,5 +1,6 @@
 import { App, Stack } from "aws-cdk-lib";
 import { RestApi } from "aws-cdk-lib/aws-apigateway";
+import { config } from "dotenv";
 
 import { Lambda } from "@tsls/core";
 
@@ -20,6 +21,8 @@ class AwsStack extends Stack {
 }
 
 export function buildStack(lambdas: Lambda[]) {
+  config();
+
   build(lambdas);
 
   const cdkApp = new App();

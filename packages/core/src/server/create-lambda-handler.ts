@@ -43,7 +43,13 @@ export function createLambdaHandler<
     } catch (error) {
       devLog("Lambda Execution Error", error);
 
-      return createLambdaErrorResponse(error);
+      let payload: unknown = error;
+
+      if (error instanceof Error) {
+        payload = error.message;
+      }
+
+      return createLambdaErrorResponse(payload);
     }
   };
 }

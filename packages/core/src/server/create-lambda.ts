@@ -9,6 +9,7 @@ export type Lambda = {
   handler: LambdaHandler;
   fullFilePath: string;
   endpointType?: EndpointType;
+  envVariables: string[];
 };
 
 function getCallerFile() {
@@ -55,5 +56,6 @@ export function createLambda<
     handler: createLambdaHandler(handler, options),
     fullFilePath: getCallerFile(),
     endpointType: options.endpointType,
+    envVariables: options.envVariables ?? [],
   };
 }

@@ -1,6 +1,6 @@
 import { json, raw } from "body-parser";
 import cors from "cors";
-
+import { config } from "dotenv";
 import express from "express";
 
 import { Lambda } from "@tsls/core";
@@ -40,6 +40,8 @@ function createApiServer(lambdas: Lambda[]) {
 }
 
 export async function dev(lambdas: Lambda[]) {
+  config();
+
   const invokeServer = createInvokeServer(lambdas);
   const apiServer = createApiServer(lambdas);
 

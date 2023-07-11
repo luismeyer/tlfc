@@ -1,11 +1,11 @@
 import { Stack } from "aws-cdk-lib";
 import { Cors, LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
+import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 
 import { Lambda } from "@tsls/core";
 
 import { lambdaUploadDir } from "./esbuild";
-import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 
 export const handlerFileName = "index";
 const handler = `${handlerFileName}.handler`;
@@ -19,12 +19,21 @@ export const createLambdaFunction = (
 
   const uploadDir = lambdaUploadDir(options);
 
+  const environment = options.envVariables.reduce(
+    (acc, envVar) => ({
+      ...acc,
+      [envVar]: process.env[envVar],
+    }),
+    {}
+  );
+
   const lambda = new Function(stack, functionName, {
     runtime: Runtime.NODEJS_18_X,
     functionName,
     handler,
     code: Code.fromAsset(uploadDir),
     environment: {
+      ...environment,
       LAMBDA_ENV: "cloud",
     },
   });

@@ -15,6 +15,11 @@ export type LambdaOptions<
    * If endpointType is not set, the lambda will not be exposed via HTTP.
    */
   endpointType?: EndpointType;
+  /**
+   * Environment Variables that will be loaded from 'process.env'
+   * into the lambda environment during the deployment
+   */
+  envVariables?: string[];
 };
 
 export function defineLambdaOptions<

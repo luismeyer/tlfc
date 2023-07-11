@@ -45,7 +45,14 @@ export function createSdkCall<
 
     const response = Buffer.from(result.Payload).toString("utf-8");
     const { body } = JSON.parse(response);
+    const data = JSON.parse(body);
 
-    return responseSchema.parse(JSON.parse(body));
+    const parseResult = responseSchema.safeParse(data);
+
+    if (!parseResult.success) {
+      throw data;
+    }
+
+    return parseResult.data;
   };
 }
