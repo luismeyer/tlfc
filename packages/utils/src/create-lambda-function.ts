@@ -31,5 +31,5 @@ export const createLambdaFunction = (
     .addResource(functionName, {
       defaultCorsPreflightOptions: { allowOrigins: Cors.ALL_ORIGINS },
     })
-    .addMethod("POST", integration);
+    .addMethod(options.endpointType, integration);
 };

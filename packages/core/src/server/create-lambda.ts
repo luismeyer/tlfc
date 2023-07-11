@@ -1,16 +1,14 @@
 import { z, ZodObject, ZodRawShape } from "zod";
 
-import { createLambdaHandler, LambdaHandler } from "./server";
-
-import { LambdaOptions } from "./shared";
+import { DEFAULT_ENDPOINT_TYPE, EndpointType, LambdaOptions } from "../shared";
+import { createLambdaHandler, LambdaHandler } from "./create-lambda-handler";
 
 export type Lambda = {
   // the functionName identifies the location where the lambda can be invoked
   functionName: string;
-
   handler: LambdaHandler;
-
   fullFilePath: string;
+  endpointType: EndpointType;
 };
 
 function getCallerFile() {
@@ -50,14 +48,12 @@ export function createLambda<
   ResponseSchema extends ZodObject<ZodRawShape>
 >(
   options: LambdaOptions<RequestSchema, ResponseSchema>,
-
   handler: (request: z.infer<RequestSchema>) => Promise<z.infer<ResponseSchema>>
 ): Lambda {
   return {
     functionName: options.functionName,
-
     handler: createLambdaHandler(handler, options),
-
     fullFilePath: getCallerFile(),
+    endpointType: options.endpointType ?? DEFAULT_ENDPOINT_TYPE,
   };
 }
