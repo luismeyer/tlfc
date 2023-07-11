@@ -9,17 +9,11 @@ export type LambdaOptions<
   functionName: string;
 };
 
-export function createLambdaOptions<
+export function defineLambdaOptions<
   RequestSchema extends ZodObject<ZodRawShape>,
   ResponseSchema extends ZodObject<ZodRawShape>
 >(
-  requestSchema: RequestSchema,
-  responseSchema: ResponseSchema,
-  functionName: string
-) {
-  return {
-    requestSchema,
-    responseSchema,
-    functionName,
-  };
+  options: LambdaOptions<RequestSchema, ResponseSchema>
+): LambdaOptions<RequestSchema, ResponseSchema> {
+  return options;
 }

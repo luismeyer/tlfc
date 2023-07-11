@@ -45,21 +45,13 @@ function getCallerFile() {
   return filename;
 }
 
-/**
- * @param handler Function that handles the request
- * @param requestSchema zod schema to parse incoming requests inside the lambda
- * @param functionName optional name of lambda to determine invocation location
- * @returns
- */
 export function createLambda<
   RequestSchema extends ZodObject<ZodRawShape>,
   ResponseSchema extends ZodObject<ZodRawShape>
 >(
-  handler: (
-    request: z.infer<RequestSchema>
-  ) => Promise<z.infer<ResponseSchema>>,
+  options: LambdaOptions<RequestSchema, ResponseSchema>,
 
-  options: LambdaOptions<RequestSchema, ResponseSchema>
+  handler: (request: z.infer<RequestSchema>) => Promise<z.infer<ResponseSchema>>
 ): Lambda {
   return {
     functionName: options.functionName,

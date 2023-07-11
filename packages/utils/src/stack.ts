@@ -22,7 +22,10 @@ class AwsStack extends Stack {
 export function buildStack(lambdas: Lambda[]) {
   build(lambdas);
 
-  const app = new App();
+  const cdkApp = new App();
 
-  return new AwsStack(app, "tSlsStack", lambdas);
+  return {
+    cdkApp,
+    stack: new AwsStack(cdkApp, "tSlsStack", lambdas),
+  };
 }
