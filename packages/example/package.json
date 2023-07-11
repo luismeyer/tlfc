@@ -1,16 +1,18 @@
 {
   "name": "@tsls/example",
   "scripts": {
-    "compile": "tsc --build",
-    "compile:watch": "tsc --build --watch",
-    "dev": "concurrently 'node lib/dev.js' 'vite'",
-    "invoke": "node lib/test-client.js",
-    "build": "vite build"
+    "client:node": "node node-client/main.mjs",
+    "client:vite": "vite",
+    "compile": "tsc -p tsconfig.node.json",
+    "compile:watch": "tsc -p tsconfig.node.json --watch",
+    "deploy": "npx cdk deploy --app 'node scripts/deploy.mjs'",
+    "dev": "node scripts/dev.mjs"
   },
   "devDependencies": {
-    "@tsls/cli": "*",
     "@tsls/core": "*",
+    "@tsls/utils": "*",
     "@types/node": "^20.4.1",
+    "cdk": "^2.87.0",
     "concurrently": "^8.2.0",
     "typescript": "^5.1.6",
     "vite": "^4.4.0",

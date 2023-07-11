@@ -1,15 +1,32 @@
-import { APIGatewayEvent } from "aws-lambda";
+import { APIGatewayEvent, APIGatewayProxyResultV2 } from "aws-lambda";
 import { z, ZodObject, ZodRawShape } from "zod";
+
+import { devLog } from "./logger";
 import { LambdaOptions } from "./shared";
 
 export type LambdaHandler = (event: APIGatewayEvent | unknown) => unknown;
 
-function createLambdaSuccessResponse(data: unknown) {
-  return { statusCode: 200, body: JSON.stringify(data) };
+const responseHeaders = {
+  "Access-Control-Allow-Origin": `*`,
+  "Access-Control-Allow-Credentials": `true`,
+  "Access-Control-Expose-Headers": `*`,
+  "content-type": `application/json`,
+};
+
+function createLambdaSuccessResponse(data: unknown): APIGatewayProxyResultV2 {
+  return {
+    statusCode: 200,
+    body: JSON.stringify(data),
+    headers: responseHeaders,
+  };
 }
 
-function createLambdaErrorResponse(error: unknown) {
-  return { statusCode: 500, body: JSON.stringify(error) };
+function createLambdaErrorResponse(error: unknown): APIGatewayProxyResultV2 {
+  return {
+    statusCode: 500,
+    body: JSON.stringify(error),
+    headers: responseHeaders,
+  };
 }
 
 const HttpEvent = z.object({
@@ -27,10 +44,10 @@ export function createLambdaHandler<
 
   { functionName, requestSchema }: LambdaOptions<RequestSchema, ResponseSchema>
 ): LambdaHandler {
-  console.info("Creating lambda Wrapper for ", functionName);
+  devLog("Creating lambda Wrapper for ", functionName);
 
   return async function (event) {
-    console.info("Running lambda ", functionName);
+    devLog("Running lambda ", functionName);
 
     if (!event || typeof event !== "object") {
       throw new Error("Lambda Event missing");
@@ -52,7 +69,7 @@ export function createLambdaHandler<
       try {
         payload = requestSchema.parse(event);
       } catch (error) {
-        console.info("Lambda Execution Error", error);
+        devLog("Lambda Execution Error", error);
 
         return createLambdaErrorResponse(error);
       }

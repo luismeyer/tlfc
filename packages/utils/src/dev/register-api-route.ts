@@ -10,10 +10,10 @@ import { getRequestHeaders } from "./get-request-headers";
 export function registerApiRoute<
   RequestSchema extends ZodObject<ZodRawShape>,
   ResponseSchema extends ZodObject<ZodRawShape>
->(app: Application, lambda: Lambda<RequestSchema, ResponseSchema>) {
+>(app: Application, lambda: Lambda) {
   const path = `/${lambda.functionName}`;
 
-  console.info(`register api route: ${path}`);
+  console.info(`tSLS: Register api route: ${path}`);
 
   app.all(path, async (request, response) => {
     try {
@@ -38,7 +38,7 @@ export function registerApiRoute<
         .header(result.headers)
         .send(result.body);
     } catch (error) {
-      console.info("Api route error", error);
+      console.info("tSLS: Api route error", error);
 
       response.status(500).send();
     }

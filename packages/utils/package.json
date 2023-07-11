@@ -1,5 +1,5 @@
 {
-  "name": "@tsls/cli",
+  "name": "@tsls/utils",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -9,10 +9,12 @@
   "dependencies": {
     "@tsls/core": "*",
     "@tsls/shared": "*",
+    "aws-cdk": "^2.87.0",
     "aws-cdk-lib": "^2.87.0",
     "cors": "^2.8.5",
     "esbuild": "^0.18.11",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "source-map-support": "^0.5.21"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",

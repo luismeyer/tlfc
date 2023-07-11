@@ -1,8 +1,17 @@
+let apiPath: string | undefined;
+
 type Config = {
+  invoke?: undefined;
+  api: {
+    endpoint: string;
+  };
+};
+
+type DevConfig = {
   invoke: {
     port: number;
     host: string;
-    endpoint: string;
+    endpoint?: string;
   };
   api: {
     port: number;
@@ -11,25 +20,39 @@ type Config = {
   };
 };
 
-export function readConfig(): Config {
-  const invokePort = 3002;
-  const invokeHost = "localhost";
-  const invokeEndpoint = `http://${invokeHost}:${invokePort}`;
+const invokePort = 3002;
+const invokeHost = "localhost";
+const invokeEndpoint = `http://${invokeHost}:${invokePort}`;
 
-  const apiPort = 3000;
-  const apiHost = "localhost";
-  const apiEndpoint = `http://${apiHost}:${apiPort}`;
+const apiPort = 3000;
+const apiHost = "localhost";
+const apiEndpoint = `http://${apiHost}:${apiPort}`;
 
-  return {
-    api: {
-      port: apiPort,
-      host: apiHost,
-      endpoint: apiEndpoint,
-    },
-    invoke: {
-      port: invokePort,
-      host: invokeHost,
-      endpoint: invokeEndpoint,
-    },
-  };
+export const devConfig: DevConfig = {
+  api: {
+    port: apiPort,
+    host: apiHost,
+    endpoint: apiEndpoint,
+  },
+  invoke: {
+    port: invokePort,
+    host: invokeHost,
+    endpoint: invokeEndpoint,
+  },
+};
+
+export function readConfig(): Config | DevConfig {
+  if (apiPath) {
+    return {
+      api: {
+        endpoint: apiPath,
+      },
+    };
+  }
+
+  return devConfig;
+}
+
+export function configure(endpoint?: string) {
+  apiPath = endpoint;
 }

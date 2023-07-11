@@ -3,3 +3,6 @@ DS_Store
 .turbo
 lib
 dist
+*.tsbuildinfo
+cdk.out
+.env
