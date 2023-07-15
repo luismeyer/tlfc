@@ -2,7 +2,7 @@ import { APIGatewayProxyResult } from "aws-lambda";
 import { Application } from "express";
 import { ZodObject, ZodRawShape } from "zod";
 
-import { Lambda } from "@tsls/core";
+import { Lambda } from "@tlfc/core";
 
 import { getQueryStringParameters } from "./get-query-string-parameters";
 import { getRequestHeaders } from "./get-request-headers";
@@ -13,7 +13,7 @@ export function registerApiRoute<
 >(app: Application, lambda: Lambda) {
   const path = `/${lambda.functionName}`;
 
-  console.info(`tSLS: Register api route: ${path}`);
+  console.info(`tlfc: Register api route: ${path}`);
 
   app.all(path, async (request, response) => {
     try {
@@ -38,7 +38,7 @@ export function registerApiRoute<
         .header(result.headers)
         .send(result.body);
     } catch (error) {
-      console.info("tSLS: Api route error", error);
+      console.info("tlfc: Api route error", error);
 
       response.status(500).send();
     }

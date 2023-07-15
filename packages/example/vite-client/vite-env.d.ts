@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_TSLS_API_PATH: string;
+  readonly VITE_TLFC_API_PATH: string;
 }
 
 interface ImportMeta {

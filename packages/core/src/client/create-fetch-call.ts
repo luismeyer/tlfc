@@ -1,9 +1,8 @@
 import { z, ZodObject, ZodRawShape } from "zod";
 
-import { readConfig } from "@tsls/shared";
-
-import { devLog } from "../logger";
+import { readConfig } from "../config";
 import { EndpointType } from "../define-lamba-options";
+import { devLog } from "../logger";
 import { Call } from "./create-lambda-call";
 
 function createUrl<RequestSchema extends ZodObject<ZodRawShape>>(

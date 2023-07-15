@@ -1,8 +1,8 @@
-import { createLambdaCall, configure } from "@tsls/core";
+import { createLambdaCall, configure } from "@tlfc/core";
 
 import { greetingOptions } from "../server/greeting-lambda";
 
-configure(import.meta.env.VITE_TSLS_API_PATH);
+configure(import.meta.env.VITE_TLFC_API_PATH);
 
 const button = document.getElementById("button")!;
 const title = document.getElementById("title")!;

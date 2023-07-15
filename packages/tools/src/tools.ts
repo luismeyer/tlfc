@@ -1,4 +1,4 @@
-import { Lambda } from "@tsls/core";
+import { Lambda } from "@tlfc/core";
 import { buildStack } from "./build-stack";
 
 import { dev } from "./dev";

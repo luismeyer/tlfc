@@ -1,5 +1,5 @@
 {
-  "name": "tsls",
+  "name": "root",
   "version": "1.0.0",
   "workspaces": [
     "packages/*"
@@ -9,6 +9,7 @@
     "compile:watch": "turbo compile:watch"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.2",
     "turbo": "^1.10.7"
   }
 }

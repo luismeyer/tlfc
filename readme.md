@@ -4,7 +4,7 @@
 
 <br />
 
-# tSLS
+# tlfc
 
 Write typesafe AWS lambda functions with:
 

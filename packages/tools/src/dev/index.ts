@@ -3,8 +3,7 @@ import cors from "cors";
 import { config } from "dotenv";
 import express from "express";
 
-import { Lambda } from "@tsls/core";
-import { devConfig } from "@tsls/shared";
+import { Lambda, devConfig } from "@tlfc/core";
 
 import { registerApiRoute } from "./register-api-route";
 import { registerInvokeRoute } from "./register-invoke-route";
@@ -20,7 +19,7 @@ function createInvokeServer(lambdas: Lambda[]) {
   registerInvokeRoute(invokeApp, lambdas);
 
   return invokeApp.listen(invoke.port, invoke.host, () => {
-    console.info(`tSLS: Invocation Lambdas at ${invoke.endpoint}`);
+    console.info(`tlfc: Invocation Lambdas at ${invoke.endpoint}`);
   });
 }
 
@@ -35,7 +34,7 @@ function createApiServer(lambdas: Lambda[]) {
   });
 
   return apiApp.listen(api.port, api.host, () => {
-    console.info(`tSLS: Api Lambdas at ${api.endpoint}`);
+    console.info(`tlfc: Api Lambdas at ${api.endpoint}`);
   });
 }
 
@@ -54,7 +53,7 @@ export async function dev(lambdas: Lambda[]) {
 
     isExiting = true;
 
-    console.info("tSLS: stopping dev servers...");
+    console.info("tlfc: stopping dev servers...");
 
     invokeServer.close();
     apiServer.close();

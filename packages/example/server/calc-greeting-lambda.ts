@@ -1,8 +1,6 @@
-import { createLambda } from "@tsls/core";
-
 import { z } from "zod";
 
-import { defineLambdaOptions } from "@tsls/core";
+import { createLambda, defineLambdaOptions } from "@tlfc/core";
 
 export const calcGreetingOptions = defineLambdaOptions({
   requestSchema: z.object({ name: z.string(), sender: z.string() }),

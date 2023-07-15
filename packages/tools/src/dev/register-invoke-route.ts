@@ -1,7 +1,7 @@
 import { Application } from "express";
 import { ZodObject, ZodRawShape } from "zod";
 
-import { Lambda } from "@tsls/core";
+import { Lambda } from "@tlfc/core";
 
 export function registerInvokeRoute<
   RequestSchema extends ZodObject<ZodRawShape>,
@@ -9,7 +9,7 @@ export function registerInvokeRoute<
 >(app: Application, functions: Lambda[]) {
   const path = "/2015-03-31/functions/:functionName/invocations";
 
-  console.info(`tSLS: Register invoke route: ${path}`);
+  console.info(`tlfc: Register invoke route: ${path}`);
 
   app.post(path, async (request, response) => {
     const { headers, body, params } = request;
@@ -38,7 +38,7 @@ export function registerInvokeRoute<
 
       return response.status(200).send(JSON.stringify(result));
     } catch (error) {
-      console.error("tSLS: Handler Error", error);
+      console.error("tlfc: Handler Error", error);
 
       if (error instanceof Error) {
         return response.status(500).send({

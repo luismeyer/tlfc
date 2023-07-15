@@ -3,7 +3,7 @@ import { Cors, LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 
-import { Lambda } from "@tsls/core";
+import { Lambda } from "@tlfc/core";
 
 import { lambdaUploadDir } from "./esbuild";
 

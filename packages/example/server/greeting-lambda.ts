@@ -1,8 +1,11 @@
-import { createLambda, createLambdaCall } from "@tsls/core";
-
 import { z } from "zod";
 
-import { defineLambdaOptions } from "@tsls/core";
+import {
+  createLambda,
+  createLambdaCall,
+  defineLambdaOptions,
+} from "@tlfc/core";
+
 import { calcGreetingOptions } from "./calc-greeting-lambda";
 
 export const greetingOptions = defineLambdaOptions({

@@ -1,8 +1,8 @@
 import { z, ZodObject, ZodRawShape } from "zod";
 
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
-import { readConfig } from "@tsls/shared";
 
+import { readConfig } from "../config";
 import { devLog } from "../logger";
 import { Call } from "./create-lambda-call";
 

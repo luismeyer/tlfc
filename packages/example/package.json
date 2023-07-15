@@ -1,5 +1,6 @@
 {
-  "name": "@tsls/example",
+  "name": "@tlfc/example",
+  "private": true,
   "scripts": {
     "client": "vite",
     "compile": "tsc -p tsconfig.node.json",
@@ -10,8 +11,8 @@
   },
   "devDependencies": {
     "@swc-node/register": "^1.6.6",
-    "@tsls/core": "*",
-    "@tsls/tools": "*",
+    "@tlfc/core": "*",
+    "@tlfc/tools": "*",
     "@types/node": "^20.4.1",
     "cdk": "^2.87.0",
     "typescript": "^5.1.6",

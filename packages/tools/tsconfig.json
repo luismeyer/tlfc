@@ -5,5 +5,5 @@
     "outDir": "lib"
   },
   "include": ["src"],
-  "references": [{ "path": "../core" }, { "path": "../shared" }]
+  "references": [{ "path": "../core" }]
 }

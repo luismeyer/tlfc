@@ -2,7 +2,7 @@ import { BuildOptions, buildSync } from "esbuild";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
 import { basename, extname, join } from "path";
 
-import { Lambda } from "@tsls/core";
+import { Lambda } from "@tlfc/core";
 import { handlerFileName } from "./create-lambda-function";
 
 export const outdir = join(process.cwd(), "dist");

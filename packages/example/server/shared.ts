@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { defineLambdaOptions } from "@tsls/core";
+import { defineLambdaOptions } from "@tlfc/core";
 
 export const lambdaOptions = defineLambdaOptions({
   requestSchema: z.object({ name: z.string() }),
