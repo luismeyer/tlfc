@@ -1,11 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "./client",
-    "module": "ESNext",
-    "noEmit": true,
-    "moduleResolution": "Bundler"
+    "rootDir": "server",
+    "outDir": "lib",
+    "noEmit": true
   },
-  "include": ["./client"],
+  "include": ["./server"],
   "references": [{ "path": "../core" }, { "path": "../tools" }]
 }

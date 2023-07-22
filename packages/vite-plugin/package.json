@@ -1,0 +1,14 @@
+{
+  "name": "@tlfc/vite",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "compile": "tsc --build",
+    "compile:watch": "tsc --build --watch --preserveWatchOutput"
+  },
+  "devDependencies": {
+    "@tlfc/tools": "*",
+    "typescript": "^5.1.6"
+  }
+}

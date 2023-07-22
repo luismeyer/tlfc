@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "vite-client",
+    "outDir": "lib",
+    "module": "ESNext",
+    "noEmit": true
+  },
+  "include": ["./vite-client"],
+  "references": [{ "path": "../client" }, { "path": "../vite-plugin" }]
+}

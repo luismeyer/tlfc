@@ -1,12 +1,15 @@
 import { Application } from "express";
 import { ZodObject, ZodRawShape } from "zod";
 
-import { Lambda } from "@tlfc/core";
+import { AnyLambda } from "../";
+import { invokeLambda } from "./invoke-lambda";
+
+import lambdaLocal = require("lambda-local");
 
 export function registerInvokeRoute<
   RequestSchema extends ZodObject<ZodRawShape>,
   ResponseSchema extends ZodObject<ZodRawShape>
->(app: Application, functions: Lambda[]) {
+>(app: Application, functions: AnyLambda[]) {
   const path = "/2015-03-31/functions/:functionName/invocations";
 
   console.info(`tlfc: Register invoke route: ${path}`);
@@ -27,7 +30,7 @@ export function registerInvokeRoute<
         throw new Error(`Missing lambda '${params.functionName}' in pool`);
       }
 
-      const resultPromise = lambda.handler(event);
+      const resultPromise = invokeLambda(lambda, event);
 
       // Don't await async lambda invocations
       if (invocationType === "Event") {

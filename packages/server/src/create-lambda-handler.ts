@@ -1,26 +1,21 @@
-import { APIGatewayEvent } from "aws-lambda";
-import { z, ZodObject, ZodRawShape } from "zod";
+import { APIGatewayProxyHandler } from "aws-lambda";
+import { ZodObject, ZodRawShape } from "zod";
+
+import { devLog, LambdaHandler, LambdaOptions } from "@tlfc/core";
 
 import {
   createLambdaErrorResponse,
   createLambdaSuccessResponse,
 } from "./lambda-response";
-import { devLog } from "../logger";
 import { parseEvent } from "./parse-event";
-import { LambdaOptions } from "../define-lamba-options";
-
-export type LambdaHandler = (event: APIGatewayEvent | unknown) => unknown;
 
 export function createLambdaHandler<
   RequestSchema extends ZodObject<ZodRawShape>,
   ResponseSchema extends ZodObject<ZodRawShape>
 >(
-  handler: (
-    request: z.infer<RequestSchema>
-  ) => Promise<z.infer<ResponseSchema>>,
-
+  handler: LambdaHandler<RequestSchema, ResponseSchema>,
   { functionName, requestSchema }: LambdaOptions<RequestSchema, ResponseSchema>
-): LambdaHandler {
+): APIGatewayProxyHandler {
   devLog("Creating lambda Wrapper for ", functionName);
 
   return async function (event) {

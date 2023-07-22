@@ -1,9 +1,11 @@
 import { tools } from "@tlfc/tools";
 
-import { calcGreetingHandler } from "../server/calc-greeting-lambda";
-import { greetingHandler } from "../server/greeting-lambda";
+import envLambda from "../server/env-lambda";
+import calcGreetingLambda from "../server/calc-greeting-lambda";
+import greetingLambda from "../server/greeting-lambda";
 
-export const { buildStack, dev } = tools([
-  calcGreetingHandler,
-  greetingHandler,
-]);
+export const { buildStack, dev } = tools(
+  calcGreetingLambda,
+  greetingLambda,
+  envLambda
+);

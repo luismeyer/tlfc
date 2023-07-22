@@ -1,50 +1,54 @@
-import { BuildOptions, buildSync } from "esbuild";
-import { copyFileSync, existsSync, mkdirSync } from "fs";
-import { basename, extname, join } from "path";
+import esbuild from "esbuild";
+import { join } from "path";
 
-import { Lambda } from "@tlfc/core";
+import { AnyLambda } from "./";
 import { handlerFileName } from "./create-lambda-function";
+import { EsbuildPlugin } from "./esbuild-plugin";
 
 export const outdir = join(process.cwd(), "dist");
 
-function lambdaDistFile(lambda: Lambda) {
-  const filename = basename(lambda.fullFilePath);
-
-  return join(outdir, filename.replace(extname(filename), ".js"));
-}
-
-export function lambdaUploadDir(lambda: Lambda) {
+export function lambdaUploadDir(lambda: AnyLambda) {
   return join(outdir, lambda.functionName);
 }
 
-function createBuildOptions(lambdas: Lambda[]): BuildOptions {
+export function lambdaBundleFile(lambda: AnyLambda) {
+  const bundleFilename = `${handlerFileName}.js`;
+  const uploadDir = lambdaUploadDir(lambda);
+
+  return join(uploadDir, bundleFilename);
+}
+
+function createBuildOptions(lambda: AnyLambda): esbuild.BuildOptions {
   return {
-    entryPoints: lambdas.map(({ fullFilePath }) => fullFilePath),
-    outdir,
+    entryPoints: [lambda.fullFilePath],
+    outfile: lambdaBundleFile(lambda),
     bundle: true,
     platform: "node",
     target: "node18",
     format: "cjs",
     logLevel: "info",
+    treeShaking: true,
+    plugins: [EsbuildPlugin],
   };
 }
 
-export function build(lambdas: Lambda[]) {
-  const options = createBuildOptions(lambdas);
-
-  buildSync(options);
-
-  // move the bundled file into seperate folder because cdk can only upload entire folders
-  lambdas.forEach((lambda) => {
-    const distFile = lambdaDistFile(lambda);
-    const filename = `${handlerFileName}${extname(distFile)}`;
-
-    const uploadDir = lambdaUploadDir(lambda);
-
-    if (!existsSync(uploadDir)) {
-      mkdirSync(uploadDir, { recursive: true });
-    }
-
-    copyFileSync(distFile, join(uploadDir, filename));
+export async function build(lambdas: AnyLambda[]) {
+  const promises = lambdas.map(async (lambda) => {
+    // seperately build each lambda so we can be sure about the entry file
+    const options = createBuildOptions(lambda);
+    await esbuild.build(options);
   });
+
+  await Promise.all(promises);
+}
+
+export async function buildWatch(lambdas: AnyLambda[]) {
+  const promises = lambdas.map(async (lambda) => {
+    const options = createBuildOptions(lambda);
+    const context = await esbuild.context(options);
+
+    await context.watch();
+  });
+
+  await Promise.all(promises);
 }

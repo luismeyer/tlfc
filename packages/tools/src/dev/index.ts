@@ -3,14 +3,16 @@ import cors from "cors";
 import { config } from "dotenv";
 import express from "express";
 
-import { Lambda, devConfig } from "@tlfc/core";
+import { devConfig } from "@tlfc/core";
 
+import { AnyLambda } from "../";
+import { buildWatch } from "../esbuild";
 import { registerApiRoute } from "./register-api-route";
 import { registerInvokeRoute } from "./register-invoke-route";
 
 const { api, invoke } = devConfig;
 
-function createInvokeServer(lambdas: Lambda[]) {
+function createInvokeServer(lambdas: AnyLambda[]) {
   // this app handles aws-sdk invocations
   const invokeApp = express();
   invokeApp.use(raw());
@@ -23,7 +25,7 @@ function createInvokeServer(lambdas: Lambda[]) {
   });
 }
 
-function createApiServer(lambdas: Lambda[]) {
+function createApiServer(lambdas: AnyLambda[]) {
   // this app handles fetch invocations
   const apiApp = express();
   apiApp.use(cors());
@@ -38,8 +40,10 @@ function createApiServer(lambdas: Lambda[]) {
   });
 }
 
-export async function dev(lambdas: Lambda[]) {
+export async function dev(lambdas: AnyLambda[]) {
   config();
+
+  await buildWatch(lambdas);
 
   const invokeServer = createInvokeServer(lambdas);
   const apiServer = createApiServer(lambdas);

@@ -1,9 +1,13 @@
 import { z, ZodObject, ZodRawShape } from "zod";
 
-import { readConfig } from "../config";
-import { EndpointType } from "../define-lamba-options";
-import { devLog } from "../logger";
-import { Call } from "./create-lambda-call";
+import {
+  DefaultEndpointType,
+  devLog,
+  EndpointType,
+  LambdaCall,
+  LambdaOptions,
+  readConfig,
+} from "@tlfc/core";
 
 function createUrl<RequestSchema extends ZodObject<ZodRawShape>>(
   functionName: string,
@@ -34,14 +38,14 @@ function createBody<RequestSchema extends ZodObject<ZodRawShape>>(
   return JSON.stringify(request);
 }
 
-export function createFetchCall<
+function createFetchCall<
   RequestSchema extends ZodObject<ZodRawShape>,
   ResponseSchema extends ZodObject<ZodRawShape>
 >(
   responseSchema: ResponseSchema,
   functionName: string,
   endpointType: EndpointType
-): Call<RequestSchema, ResponseSchema> {
+): LambdaCall<RequestSchema, ResponseSchema> {
   devLog(`Creating call with Fetch for ${functionName}`);
 
   return async function (request: z.infer<RequestSchema>) {
@@ -64,5 +68,29 @@ export function createFetchCall<
     }
 
     return responseSchema.parse(response);
+  };
+}
+
+export function createLambdaFetchCall<
+  RequestSchema extends ZodObject<ZodRawShape>,
+  ResponseSchema extends ZodObject<ZodRawShape>
+>({
+  functionName,
+  responseSchema,
+  endpointType = DefaultEndpointType,
+}: LambdaOptions<RequestSchema, ResponseSchema>): LambdaCall<
+  RequestSchema,
+  ResponseSchema
+> {
+  return function (request: z.infer<RequestSchema>) {
+    if (!endpointType) {
+      throw new Error(
+        "Could not create fetch call function. Did you forget to set the endpointType on you Lambda?"
+      );
+    }
+
+    const call = createFetchCall(responseSchema, functionName, endpointType);
+
+    return call(request);
   };
 }

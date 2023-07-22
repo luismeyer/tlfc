@@ -1,15 +1,15 @@
 {
-  "name": "@tlfc/core",
-  "version": "1.0.1",
+  "name": "@tlfc/server",
+  "version": "1.0.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "compile": "tsc",
-    "compile:watch": "tsc --watch --preserveWatchOutput"
+    "compile": "tsc --build",
+    "compile:watch": "tsc --build --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.363.0",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "@tlfc/core": "*"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",

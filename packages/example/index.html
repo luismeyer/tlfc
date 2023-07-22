@@ -5,12 +5,40 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
+
+    <style>
+      figure {
+        margin: 0;
+      }
+    </style>
   </head>
 
   <body>
-    <button id="button">Click</button>
-    <span id="title"></span>
+    <h1>Vite @tlfc app</h1>
 
-    <script type="module" src="./vite-client/main.ts"></script>
+    <figure>
+      <figcaption>When the button is clicked:</figcaption>
+
+      <ol>
+        <li>A fetch call is started to the greetingLambda.</li>
+
+        <li>
+          The greetingLambda invokes the calcGreetingLambda with the aws-sdk.
+        </li>
+
+        <li>
+          The calcGreetingLambda invokes the calcCalcGreetingLambda with the
+          aws-sdk.
+        </li>
+      </ol>
+    </figure>
+
+    <div>
+      <button id="button">Send it</button>
+
+      <p id="title"></p>
+    </div>
+
+    <script type="module" src="./client/main.ts"></script>
   </body>
 </html>
