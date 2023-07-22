@@ -1,4 +1,4 @@
-import { APIGatewayProxyResultV2 } from "aws-lambda";
+import { APIGatewayProxyResult } from "aws-lambda";
 
 const responseHeaders = {
   "Access-Control-Allow-Origin": `*`,
@@ -9,7 +9,7 @@ const responseHeaders = {
 
 export function createLambdaSuccessResponse(
   data: unknown
-): APIGatewayProxyResultV2 {
+): APIGatewayProxyResult {
   return {
     statusCode: 200,
     body: JSON.stringify(data),
@@ -19,7 +19,7 @@ export function createLambdaSuccessResponse(
 
 export function createLambdaErrorResponse(
   error: unknown
-): APIGatewayProxyResultV2 {
+): APIGatewayProxyResult {
   return {
     statusCode: 500,
     body: JSON.stringify(error),

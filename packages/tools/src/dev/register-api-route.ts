@@ -2,22 +2,22 @@ import { APIGatewayProxyResult } from "aws-lambda";
 import { Application } from "express";
 import { ZodObject, ZodRawShape } from "zod";
 
-import { Lambda } from "@tlfc/core";
-
+import { AnyLambda } from "../";
 import { getQueryStringParameters } from "./get-query-string-parameters";
 import { getRequestHeaders } from "./get-request-headers";
+import { invokeLambda } from "./invoke-lambda";
 
 export function registerApiRoute<
   RequestSchema extends ZodObject<ZodRawShape>,
   ResponseSchema extends ZodObject<ZodRawShape>
->(app: Application, lambda: Lambda) {
+>(app: Application, lambda: AnyLambda) {
   const path = `/${lambda.functionName}`;
 
   console.info(`tlfc: Register api route: ${path}`);
 
   app.all(path, async (request, response) => {
     try {
-      const result = (await lambda.handler({
+      const result = (await invokeLambda(lambda, {
         ...getQueryStringParameters(request),
         ...getRequestHeaders(request),
         requestContext: {

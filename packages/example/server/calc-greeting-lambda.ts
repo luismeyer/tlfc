@@ -1,27 +1,21 @@
 import { z } from "zod";
 
-import { createLambda, defineLambdaOptions } from "@tlfc/core";
+import { createLambda } from "@tlfc/server";
 
-export const calcGreetingOptions = defineLambdaOptions({
-  requestSchema: z.object({ name: z.string(), sender: z.string() }),
-  responseSchema: z.object({ message: z.string() }),
-  functionName: "calcGreetingHandler",
-  envVariables: ["SOME_ENV_VAR"],
-});
+import envLambda from "./env-lambda";
 
-export const calcGreetingHandler = createLambda(
-  calcGreetingOptions,
+export default createLambda(
+  {
+    requestSchema: z.object({ name: z.string(), sender: z.string() }),
+    responseSchema: z.object({ message: z.string() }),
+    functionName: "calcGreetingHandler",
+    envVariables: ["SOME_ENV_VAR"],
+  },
   async (event) => {
-    const env = process.env.SOME_ENV_VAR;
-
-    if (!env) {
-      throw new Error("Missing env var 'SOME_ENV_VAR'");
-    }
+    const { env } = await envLambda.call({ name: "admin" });
 
     return {
-      message: `Hello ${event.name} from ${event.sender} inside ${env}!`,
+      message: `Moin, ${event.name}. This is the ${event.sender}. I'm running inside ${env}!`,
     };
   }
 );
-
-export const handler = calcGreetingHandler.handler;

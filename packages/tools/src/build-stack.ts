@@ -2,13 +2,12 @@ import { App, Stack } from "aws-cdk-lib";
 import { RestApi } from "aws-cdk-lib/aws-apigateway";
 import { config } from "dotenv";
 
-import { Lambda } from "@tlfc/core";
-
+import { AnyLambda } from "./";
 import { createLambdaFunction } from "./create-lambda-function";
 import { build } from "./esbuild";
 
 class AwsStack extends Stack {
-  constructor(app: App, id: string, lambdaOptions: Lambda[]) {
+  constructor(app: App, id: string, lambdaOptions: AnyLambda[]) {
     super(app, id);
 
     const api = new RestApi(this, "tlfcApi", {
@@ -20,10 +19,10 @@ class AwsStack extends Stack {
   }
 }
 
-export function buildStack(lambdas: Lambda[]) {
+export async function buildStack(lambdas: AnyLambda[]) {
   config();
 
-  build(lambdas);
+  await build(lambdas);
 
   const cdkApp = new App();
 

@@ -3,23 +3,24 @@ import { Cors, LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 
-import { Lambda } from "@tlfc/core";
+import { DefaultEndpointType } from "@tlfc/core";
 
+import { AnyLambda } from "./";
 import { lambdaUploadDir } from "./esbuild";
 
 export const handlerFileName = "index";
-const handler = `${handlerFileName}.handler`;
+const handler = `${handlerFileName}.default.handler`;
 
 export const createLambdaFunction = (
   stack: Stack,
-  options: Lambda,
+  lambda: AnyLambda,
   restApi: RestApi
 ) => {
-  const { functionName } = options;
+  const { functionName, envVariables } = lambda;
 
-  const uploadDir = lambdaUploadDir(options);
+  const uploadDir = lambdaUploadDir(lambda);
 
-  const environment = options.envVariables.reduce(
+  const environment = envVariables.reduce(
     (acc, envVar) => ({
       ...acc,
       [envVar]: process.env[envVar],
@@ -27,25 +28,26 @@ export const createLambdaFunction = (
     {}
   );
 
-  const lambda = new Function(stack, functionName, {
+  const awsLambda = new Function(stack, functionName, {
     runtime: Runtime.NODEJS_18_X,
     functionName,
     handler,
     code: Code.fromAsset(uploadDir),
     environment: {
       ...environment,
+      // tell the aws-sdk to not use the local config
       LAMBDA_ENV: "cloud",
     },
   });
 
-  if (options.endpointType && restApi) {
-    const integration = new LambdaIntegration(lambda);
+  if (restApi) {
+    const integration = new LambdaIntegration(awsLambda);
 
     restApi.root
       .addResource(functionName, {
         defaultCorsPreflightOptions: { allowOrigins: Cors.ALL_ORIGINS },
       })
-      .addMethod(options.endpointType, integration);
+      .addMethod(lambda.endpointType ?? DefaultEndpointType, integration);
   }
 
   // TODO: use more granular permissions
@@ -53,7 +55,7 @@ export const createLambdaFunction = (
   statement.addActions("lambda:InvokeFunction");
   statement.addResources("*");
 
-  lambda.addToRolePolicy(statement);
+  awsLambda.addToRolePolicy(statement);
 
-  return lambda;
+  return awsLambda;
 };

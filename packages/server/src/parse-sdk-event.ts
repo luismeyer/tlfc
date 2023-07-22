@@ -1,6 +1,6 @@
 import { z, ZodObject, ZodRawShape } from "zod";
 
-import { devLog } from "../logger";
+import { devLog } from "@tlfc/core";
 
 export function parseSdkEvent<RequestSchema extends ZodObject<ZodRawShape>>(
   event: unknown,

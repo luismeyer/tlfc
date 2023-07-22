@@ -1,6 +1,6 @@
 import { z, ZodObject, ZodRawShape } from "zod";
 
-import { devLog } from "../logger";
+import { devLog } from "@tlfc/core";
 
 const HttpGetEvent = z.object({
   queryStringParameters: z.unknown(),

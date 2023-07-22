@@ -1,6 +1,5 @@
-import { Lambda } from "@tlfc/core";
+import { AnyLambda } from "./";
 import { buildStack } from "./build-stack";
-
 import { dev } from "./dev";
 
 type Tools = {
@@ -8,7 +7,7 @@ type Tools = {
   dev: () => Promise<void>;
 };
 
-export function tools(lambdas: Lambda[]): Tools {
+export function tools(...lambdas: AnyLambda[]): Tools {
   return {
     buildStack: () => buildStack(lambdas),
     dev: () => dev(lambdas),

@@ -1,16 +1,8 @@
-import { z, ZodObject, ZodRawShape } from "zod";
+import { ZodObject, ZodRawShape } from "zod";
 
-import { EndpointType, LambdaOptions } from "../define-lamba-options";
-import { createLambdaHandler, LambdaHandler } from "./create-lambda-handler";
+import { Lambda, LambdaHandler, LambdaOptions } from "@tlfc/core";
 
-export type Lambda = {
-  // the functionName identifies the location where the lambda can be invoked
-  functionName: string;
-  handler: LambdaHandler;
-  fullFilePath: string;
-  endpointType?: EndpointType;
-  envVariables: string[];
-};
+import { createLambdaHandler } from "./create-lambda-handler";
 
 function getCallerFile() {
   let filename = "";
@@ -49,13 +41,20 @@ export function createLambda<
   ResponseSchema extends ZodObject<ZodRawShape>
 >(
   options: LambdaOptions<RequestSchema, ResponseSchema>,
-  handler: (request: z.infer<RequestSchema>) => Promise<z.infer<ResponseSchema>>
-): Lambda {
+  handler: LambdaHandler<RequestSchema, ResponseSchema>
+): Lambda<RequestSchema, ResponseSchema> {
+  const { functionName, endpointType } = options;
+
   return {
-    functionName: options.functionName,
+    functionName: functionName,
     handler: createLambdaHandler(handler, options),
+    call: () => {
+      throw new Error(
+        "@tlfc Error: Cannot call lambda in server code. Did you forget to use a @tlfc plugin?"
+      );
+    },
     fullFilePath: getCallerFile(),
-    endpointType: options.endpointType,
-    envVariables: options.envVariables ?? [],
+    endpointType: endpointType,
+    envVariables: options?.envVariables ?? [],
   };
 }

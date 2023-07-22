@@ -6,10 +6,11 @@
   ],
   "scripts": {
     "compile": "turbo compile",
-    "compile:watch": "turbo compile:watch"
+    "compile:watch": "turbo compile:watch",
+    "dev": " turbo dev"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
-    "turbo": "^1.10.7"
+    "turbo": "^1.10.12"
   }
 }
