@@ -14,7 +14,8 @@
     "@tlfc/client": "*",
     "@tlfc/core": "*",
     "@tlfc/server": "*",
-    "@tlfc/tools": "*"
+    "@tlfc/tools": "*",
+    "commander": "^11.0.0"
   },
   "devDependencies": {
     "typescript": "^5.1.6"
