@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
+
 import { ServerImportLiteral } from "./parse-server-code";
+import { DistDirName } from "./esbuild";
 
 export async function discoverLambdaEntries(
   dir: string = process.cwd()
@@ -12,8 +14,11 @@ export async function discoverLambdaEntries(
   const promises = dirContents.map(async (content) => {
     const filepath = path.join(dir, content);
 
-    // Ignore node_modules
-    if (filepath.includes("node_modules")) {
+    // Ignore node_modules and dist dir
+    if (
+      filepath.includes("/node_modules/") ||
+      filepath.includes(`/${DistDirName}/`)
+    ) {
       return;
     }
 

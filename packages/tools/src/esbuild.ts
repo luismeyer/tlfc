@@ -13,7 +13,9 @@ export type LambdaOutput = {
   definition: AnyLambda;
 };
 
-export const outdir = path.join(process.cwd(), "dist");
+export const DistDirName = "dist";
+
+export const outdir = path.join(process.cwd(), DistDirName);
 
 function lambdaOutput(lambdaEntry: string) {
   const bundleFilename = `${handlerFileName}.js`;
