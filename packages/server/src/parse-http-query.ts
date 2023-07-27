@@ -3,8 +3,31 @@ import { z, ZodObject, ZodRawShape } from "zod";
 import { devLog } from "@tlfc/core";
 
 const HttpGetEvent = z.object({
-  queryStringParameters: z.unknown(),
+  queryStringParameters: z.record(z.string()),
 });
+
+function preParseQuery(
+  query: Record<string, string>
+): undefined | Record<string, string | number | boolean> {
+  let result: Record<string, string | number | boolean> = {};
+
+  Object.entries(query).forEach(([key, value]) => {
+    const number = parseInt(value);
+    if (!isNaN(number)) {
+      result[key] = number;
+      return;
+    }
+
+    if (value === "true" || value === "false") {
+      result[key] = value === "true";
+      return;
+    }
+
+    result[key] = value;
+  });
+
+  return result;
+}
 
 export function parseHttpQuery<RequestSchema extends ZodObject<ZodRawShape>>(
   event: unknown,
@@ -17,9 +40,9 @@ export function parseHttpQuery<RequestSchema extends ZodObject<ZodRawShape>>(
     return;
   }
 
-  const queryParseResult = requestSchema.safeParse(
-    eventParseResult.data.queryStringParameters
-  );
+  const query = preParseQuery(eventParseResult.data.queryStringParameters);
+
+  const queryParseResult = requestSchema.safeParse(query);
 
   if (!queryParseResult.success) {
     devLog("Http Query parse error ", queryParseResult.error);

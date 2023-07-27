@@ -3,11 +3,11 @@ import { vitePluginTlfc } from "@tlfc/vite";
 
 export default defineConfig({
   optimizeDeps: {
-    include: ["@tlfc/client"],
+    include: ["@tlfc/client", "@tlfc/core"],
   },
   build: {
     commonjsOptions: {
-      include: [/@tlfc\/client/],
+      include: [/@tlfc\/client/, /@tlfc\/core/],
     },
   },
   plugins: [vitePluginTlfc()],
