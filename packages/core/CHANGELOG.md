@@ -1,5 +1,11 @@
 # @tlfc/core
 
+## 1.1.1
+
+### Patch Changes
+
+- d15ec75: Fix watch and exclude dist from entry discover
+
 ## 1.1.0
 
 ### Minor Changes
