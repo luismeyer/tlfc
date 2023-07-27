@@ -1,5 +1,11 @@
 # @tlfc/tools
 
+## 1.2.0
+
+### Minor Changes
+
+- 263526f: Change lambda entry api and add automatic entry discovery
+
 ## 1.1.0
 
 ### Minor Changes
