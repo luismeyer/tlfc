@@ -79,7 +79,9 @@ export async function buildWatch(entries: string[]): Promise<LambdaOutput[]> {
     const { uploadDir, bundleFile } = lambdaOutput(entry);
 
     const options = createBuildOptions(entry, bundleFile);
-    await esbuild.context(options);
+    const context = await esbuild.context(options);
+
+    await context.watch();
 
     const module = await import(bundleFile);
 
