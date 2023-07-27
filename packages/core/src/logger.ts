@@ -1,5 +1,5 @@
 // TODO
-const debug = false;
+const debug = process.env.TLFC_DEBUG !== undefined;
 
 export const devLog = (...args: unknown[]) => {
   if (!debug) {
