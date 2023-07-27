@@ -1,19 +1,15 @@
 import { APIGatewayProxyResult } from "aws-lambda";
 import { Application } from "express";
-import { ZodObject, ZodRawShape } from "zod";
 
-import { AnyLambda } from "../";
 import { getQueryStringParameters } from "./get-query-string-parameters";
 import { getRequestHeaders } from "./get-request-headers";
 import { invokeLambda } from "./invoke-lambda";
+import { LambdaOutput } from "../esbuild";
 
-export function registerApiRoute<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
->(app: Application, lambda: AnyLambda) {
-  const path = `/${lambda.functionName}`;
+export function registerApiRoute(app: Application, lambda: LambdaOutput) {
+  const path = `/${lambda.definition.functionName}`;
 
-  console.info(`tlfc: Register api route: ${path}`);
+  console.info(`@tlfc: Register api route: ${path}`);
 
   app.all(path, async (request, response) => {
     try {
@@ -38,7 +34,7 @@ export function registerApiRoute<
         .header(result.headers)
         .send(result.body);
     } catch (error) {
-      console.info("tlfc: Api route error", error);
+      console.info("@tlfc: Api route error", error);
 
       response.status(500).send();
     }

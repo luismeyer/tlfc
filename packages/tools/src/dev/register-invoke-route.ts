@@ -1,18 +1,16 @@
 import { Application } from "express";
 import { ZodObject, ZodRawShape } from "zod";
 
-import { AnyLambda } from "../";
 import { invokeLambda } from "./invoke-lambda";
-
-import lambdaLocal = require("lambda-local");
+import { LambdaOutput } from "../esbuild";
 
 export function registerInvokeRoute<
   RequestSchema extends ZodObject<ZodRawShape>,
   ResponseSchema extends ZodObject<ZodRawShape>
->(app: Application, functions: AnyLambda[]) {
+>(app: Application, functions: LambdaOutput[]) {
   const path = "/2015-03-31/functions/:functionName/invocations";
 
-  console.info(`tlfc: Register invoke route: ${path}`);
+  console.info(`@tlfc: Register invoke route: ${path}`);
 
   app.post(path, async (request, response) => {
     const { headers, body, params } = request;
@@ -23,7 +21,7 @@ export function registerInvokeRoute<
 
     try {
       const lambda = functions.find(
-        (lambda) => lambda.functionName === params.functionName
+        (lambda) => lambda.definition.functionName === params.functionName
       );
 
       if (!lambda) {
@@ -41,7 +39,7 @@ export function registerInvokeRoute<
 
       return response.status(200).send(JSON.stringify(result));
     } catch (error) {
-      console.error("tlfc: Handler Error", error);
+      console.error("@tlfc: Handler Error", error);
 
       if (error instanceof Error) {
         return response.status(500).send({

@@ -2,32 +2,37 @@ import { App, Stack } from "aws-cdk-lib";
 import { RestApi } from "aws-cdk-lib/aws-apigateway";
 import { config } from "dotenv";
 
-import { AnyLambda } from "./";
 import { createLambdaFunction } from "./create-lambda-function";
-import { build } from "./esbuild";
+import { discoverLambdaEntries } from "./discoverLambdaEntries";
+import { build, LambdaOutput } from "./esbuild";
 
 class AwsStack extends Stack {
-  constructor(app: App, id: string, lambdaOptions: AnyLambda[]) {
+  constructor(app: App, id: string, lambdas: LambdaOutput[]) {
     super(app, id);
 
     const api = new RestApi(this, "tlfcApi", {
-      restApiName: "tlfc Api",
-      description: "RestApi which holds all tlfc endpoints",
+      restApiName: "@tlfc Api",
+      description: "RestApi which holds all @tlfc endpoints",
     });
 
-    lambdaOptions.forEach((lambda) => createLambdaFunction(this, lambda, api));
+    lambdas.forEach((lambda) => createLambdaFunction(this, api, lambda));
   }
 }
 
-export async function buildStack(lambdas: AnyLambda[]) {
+export async function buildStack(lambdaEntries?: string[]) {
   config();
 
-  await build(lambdas);
+  let entries = lambdaEntries;
+  if (!entries?.length) {
+    entries = await discoverLambdaEntries();
+  }
+
+  const outputs = await build(entries);
 
   const cdkApp = new App();
 
   return {
     cdkApp,
-    stack: new AwsStack(cdkApp, "tlfcStack", lambdas),
+    stack: new AwsStack(cdkApp, "tlfcStack", outputs),
   };
 }

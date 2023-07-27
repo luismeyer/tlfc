@@ -5,20 +5,17 @@ import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 
 import { DefaultEndpointType } from "@tlfc/core";
 
-import { AnyLambda } from "./";
-import { lambdaUploadDir } from "./esbuild";
+import { LambdaOutput } from "./esbuild";
 
 export const handlerFileName = "index";
 const handler = `${handlerFileName}.default.handler`;
 
 export const createLambdaFunction = (
   stack: Stack,
-  lambda: AnyLambda,
-  restApi: RestApi
+  restApi: RestApi,
+  { definition, uploadDir }: LambdaOutput
 ) => {
-  const { functionName, envVariables } = lambda;
-
-  const uploadDir = lambdaUploadDir(lambda);
+  const { functionName, envVariables, endpointType } = definition;
 
   const environment = envVariables.reduce(
     (acc, envVar) => ({
@@ -47,7 +44,7 @@ export const createLambdaFunction = (
       .addResource(functionName, {
         defaultCorsPreflightOptions: { allowOrigins: Cors.ALL_ORIGINS },
       })
-      .addMethod(lambda.endpointType ?? DefaultEndpointType, integration);
+      .addMethod(endpointType ?? DefaultEndpointType, integration);
   }
 
   // TODO: use more granular permissions

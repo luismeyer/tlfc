@@ -1,27 +1,34 @@
 import esbuild from "esbuild";
-import { join } from "path";
+import path from "path";
+import fs from "fs";
 
-import { AnyLambda } from "./";
 import { handlerFileName } from "./create-lambda-function";
 import { EsbuildPlugin } from "./esbuild-plugin";
+import { AnyLambda } from ".";
 
-export const outdir = join(process.cwd(), "dist");
+export type LambdaOutput = {
+  entry: string;
+  bundleFile: string;
+  uploadDir: string;
+  definition: AnyLambda;
+};
 
-export function lambdaUploadDir(lambda: AnyLambda) {
-  return join(outdir, lambda.functionName);
-}
+export const outdir = path.join(process.cwd(), "dist");
 
-export function lambdaBundleFile(lambda: AnyLambda) {
+function lambdaOutput(lambdaEntry: string) {
   const bundleFilename = `${handlerFileName}.js`;
-  const uploadDir = lambdaUploadDir(lambda);
+  const uploadDir = path.join(outdir, path.basename(lambdaEntry));
 
-  return join(uploadDir, bundleFilename);
+  return { uploadDir, bundleFile: path.join(uploadDir, bundleFilename) };
 }
 
-function createBuildOptions(lambda: AnyLambda): esbuild.BuildOptions {
+function createBuildOptions(
+  entry: string,
+  outfile: string
+): esbuild.BuildOptions {
   return {
-    entryPoints: [lambda.fullFilePath],
-    outfile: lambdaBundleFile(lambda),
+    entryPoints: [entry],
+    outfile,
     bundle: true,
     platform: "node",
     target: "node18",
@@ -32,23 +39,57 @@ function createBuildOptions(lambda: AnyLambda): esbuild.BuildOptions {
   };
 }
 
-export async function build(lambdas: AnyLambda[]) {
-  const promises = lambdas.map(async (lambda) => {
-    // seperately build each lambda so we can be sure about the entry file
-    const options = createBuildOptions(lambda);
-    await esbuild.build(options);
-  });
+function validateEntry(entry: string) {
+  if (!entry.trim().length) {
+    throw new Error("@tlfc Error: Received empty string as entry file.");
+  }
 
-  await Promise.all(promises);
+  if (!fs.existsSync(entry)) {
+    throw new Error(`@tlfc Error: Entry file '${entry}' does not exist.`);
+  }
 }
 
-export async function buildWatch(lambdas: AnyLambda[]) {
-  const promises = lambdas.map(async (lambda) => {
-    const options = createBuildOptions(lambda);
-    const context = await esbuild.context(options);
+export async function build(entries: string[]): Promise<LambdaOutput[]> {
+  const promises = entries.map(async (entry) => {
+    validateEntry(entry);
 
-    await context.watch();
+    const { uploadDir, bundleFile } = lambdaOutput(entry);
+
+    // seperately build each lambda so we can be sure about the entry file
+    const options = createBuildOptions(entry, bundleFile);
+    await esbuild.build(options);
+
+    const module = await import(bundleFile);
+
+    return {
+      entry,
+      bundleFile,
+      uploadDir,
+      definition: module.default,
+    };
   });
 
-  await Promise.all(promises);
+  return Promise.all(promises);
+}
+
+export async function buildWatch(entries: string[]): Promise<LambdaOutput[]> {
+  const promises = entries.map(async (entry) => {
+    validateEntry(entry);
+
+    const { uploadDir, bundleFile } = lambdaOutput(entry);
+
+    const options = createBuildOptions(entry, bundleFile);
+    await esbuild.context(options);
+
+    const module = await import(bundleFile);
+
+    return {
+      entry,
+      bundleFile,
+      uploadDir,
+      definition: module.default,
+    };
+  });
+
+  return Promise.all(promises);
 }

@@ -9,7 +9,6 @@ export default createLambda(
     requestSchema: z.object({ name: z.string() }),
     responseSchema: z.object({ message: z.string() }),
     functionName: "greetingHandler",
-    endpointType: "GET",
   },
   async (event) => {
     const { message } = await calcGreetingLambda.call({

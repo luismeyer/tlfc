@@ -5,14 +5,14 @@ import express from "express";
 
 import { devConfig } from "@tlfc/core";
 
-import { AnyLambda } from "../";
-import { buildWatch } from "../esbuild";
+import { discoverLambdaEntries } from "../discoverLambdaEntries";
+import { buildWatch, LambdaOutput } from "../esbuild";
 import { registerApiRoute } from "./register-api-route";
 import { registerInvokeRoute } from "./register-invoke-route";
 
 const { api, invoke } = devConfig;
 
-function createInvokeServer(lambdas: AnyLambda[]) {
+function createInvokeServer(lambdas: LambdaOutput[]) {
   // this app handles aws-sdk invocations
   const invokeApp = express();
   invokeApp.use(raw());
@@ -21,11 +21,11 @@ function createInvokeServer(lambdas: AnyLambda[]) {
   registerInvokeRoute(invokeApp, lambdas);
 
   return invokeApp.listen(invoke.port, invoke.host, () => {
-    console.info(`tlfc: Invocation Lambdas at ${invoke.endpoint}`);
+    console.info(`@tlfc: Invocation Lambdas at ${invoke.endpoint}`);
   });
 }
 
-function createApiServer(lambdas: AnyLambda[]) {
+function createApiServer(lambdas: LambdaOutput[]) {
   // this app handles fetch invocations
   const apiApp = express();
   apiApp.use(cors());
@@ -36,17 +36,22 @@ function createApiServer(lambdas: AnyLambda[]) {
   });
 
   return apiApp.listen(api.port, api.host, () => {
-    console.info(`tlfc: Api Lambdas at ${api.endpoint}`);
+    console.info(`@tlfc: Api Lambdas at ${api.endpoint}`);
   });
 }
 
-export async function dev(lambdas: AnyLambda[]) {
+export async function dev(lambdaEntries?: string[]) {
   config();
 
-  await buildWatch(lambdas);
+  let entries = lambdaEntries;
+  if (!entries?.length) {
+    entries = await discoverLambdaEntries();
+  }
 
-  const invokeServer = createInvokeServer(lambdas);
-  const apiServer = createApiServer(lambdas);
+  const outputs = await buildWatch(entries);
+
+  const invokeServer = createInvokeServer(outputs);
+  const apiServer = createApiServer(outputs);
 
   let isExiting = false;
 
@@ -57,7 +62,7 @@ export async function dev(lambdas: AnyLambda[]) {
 
     isExiting = true;
 
-    console.info("tlfc: stopping dev servers...");
+    console.info("@tlfc: stopping dev servers...");
 
     invokeServer.close();
     apiServer.close();

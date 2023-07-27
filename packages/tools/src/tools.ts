@@ -1,4 +1,3 @@
-import { AnyLambda } from "./";
 import { buildStack } from "./build-stack";
 import { dev } from "./dev";
 
@@ -7,9 +6,9 @@ type Tools = {
   dev: () => Promise<void>;
 };
 
-export function tools(...lambdas: AnyLambda[]): Tools {
+export function tools(...lambdaEntries: string[]): Tools {
   return {
-    buildStack: () => buildStack(lambdas),
-    dev: () => dev(lambdas),
+    buildStack: () => buildStack(lambdaEntries),
+    dev: () => dev(lambdaEntries),
   };
 }

@@ -1,8 +1,7 @@
 import crypto from "crypto";
 import fs from "fs";
 
-import { AnyLambda } from "../";
-import { lambdaBundleFile } from "../esbuild";
+import { LambdaOutput } from "../esbuild";
 
 const hashMap = new Map<string, string>();
 
@@ -15,9 +14,10 @@ async function createFileHash(file: string) {
   return hash.digest("hex");
 }
 
-export async function invokeLambda(lambda: AnyLambda, event: unknown) {
-  const bundleFile = lambdaBundleFile(lambda);
-
+export async function invokeLambda(
+  { bundleFile }: LambdaOutput,
+  event: unknown
+) {
   const hash = await createFileHash(bundleFile);
 
   // use the latest bundle when the file hash changed

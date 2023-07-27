@@ -4,7 +4,7 @@
 
 <br />
 
-# tlfc
+# @tlfc
 
 Write typesafe AWS lambda functions with:
 
@@ -13,6 +13,7 @@ Write typesafe AWS lambda functions with:
 - 🚀 quick deployments
 - 🔒 request and response validation
 - ⭐️ aws-sdk or fetch for either Browser or Node.js clients
+- 😷 typesafe client and server interface
 
 ## How it works
 
