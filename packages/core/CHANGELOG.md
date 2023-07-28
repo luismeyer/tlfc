@@ -1,5 +1,11 @@
 # @tlfc/core
 
+## 1.2.0
+
+### Minor Changes
+
+- abc412d: Preparse query and env loading
+
 ## 1.1.1
 
 ### Patch Changes

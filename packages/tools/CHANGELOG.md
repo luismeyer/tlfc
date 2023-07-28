@@ -1,5 +1,17 @@
 # @tlfc/tools
 
+## 1.3.0
+
+### Minor Changes
+
+- abc412d: Preparse query and env loading
+
+### Patch Changes
+
+- Updated dependencies [abc412d]
+  - @tlfc/core@1.2.0
+  - @tlfc/server@1.2.0
+
 ## 1.2.1
 
 ### Patch Changes
