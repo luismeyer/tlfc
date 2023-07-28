@@ -1,6 +1,5 @@
 import { z, ZodObject, ZodRawShape } from "zod";
-
-import { devLog } from "@tlfc/core";
+import { ParseError } from "./event-parse-error";
 
 const HttpEvent = z.object({
   body: z.string(),
@@ -10,29 +9,20 @@ const HttpEvent = z.object({
 export function parseHttpBody<RequestSchema extends ZodObject<ZodRawShape>>(
   event: unknown,
   requestSchema: RequestSchema
-): z.TypeOf<RequestSchema> | undefined {
-  const eventParseResult = HttpEvent.safeParse(event);
+): z.TypeOf<RequestSchema> {
+  const eventParseResult = HttpEvent.parse(event);
 
-  if (!eventParseResult.success) {
-    devLog("Http Event parse error ", eventParseResult.error);
-    return;
-  }
-
-  let {
-    data: { body, isBase64Encoded },
-  } = eventParseResult;
+  let { body, isBase64Encoded } = eventParseResult;
 
   if (isBase64Encoded) {
     const buffer = Buffer.from(body, "base64");
     body = buffer.toString("utf-8");
   }
 
-  const bodyParseResult = requestSchema.safeParse(JSON.parse(body));
-
-  if (!bodyParseResult.success) {
-    devLog("Http Body parse error ", bodyParseResult.error);
-    return;
+  const result = requestSchema.safeParse(JSON.parse(body));
+  if (!result.success) {
+    throw new ParseError(result.error.issues);
   }
 
-  return bodyParseResult.data;
+  return result.data;
 }

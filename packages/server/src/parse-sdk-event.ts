@@ -1,17 +1,15 @@
 import { z, ZodObject, ZodRawShape } from "zod";
-
-import { devLog } from "@tlfc/core";
+import { ParseError } from "./event-parse-error";
 
 export function parseSdkEvent<RequestSchema extends ZodObject<ZodRawShape>>(
   event: unknown,
   requestSchema: RequestSchema
-): z.TypeOf<RequestSchema> | undefined {
-  const parseResult = requestSchema.safeParse(event);
+): z.TypeOf<RequestSchema> {
+  const result = requestSchema.safeParse(event);
 
-  if (!parseResult.success) {
-    devLog("SDK Event parse error ", parseResult.error);
-    return;
+  if (!result.success) {
+    throw new ParseError(result.error.issues);
   }
 
-  return parseResult.data;
+  return result.data;
 }

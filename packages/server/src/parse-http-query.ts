@@ -1,6 +1,5 @@
 import { z, ZodObject, ZodRawShape } from "zod";
-
-import { devLog } from "@tlfc/core";
+import { ParseError } from "./event-parse-error";
 
 const HttpGetEvent = z.object({
   queryStringParameters: z.record(z.string()),
@@ -32,22 +31,16 @@ function preParseQuery(
 export function parseHttpQuery<RequestSchema extends ZodObject<ZodRawShape>>(
   event: unknown,
   requestSchema: RequestSchema
-): z.TypeOf<RequestSchema> | undefined {
-  const eventParseResult = HttpGetEvent.safeParse(event);
+): z.TypeOf<RequestSchema> {
+  const eventParseResult = HttpGetEvent.parse(event);
 
-  if (!eventParseResult.success) {
-    devLog("Http Query event parse error ", eventParseResult.error);
-    return;
+  const query = preParseQuery(eventParseResult.queryStringParameters);
+
+  const result = requestSchema.safeParse(query);
+
+  if (!result.success) {
+    throw new ParseError(result.error.issues);
   }
 
-  const query = preParseQuery(eventParseResult.data.queryStringParameters);
-
-  const queryParseResult = requestSchema.safeParse(query);
-
-  if (!queryParseResult.success) {
-    devLog("Http Query parse error ", queryParseResult.error);
-    return;
-  }
-
-  return queryParseResult.data;
+  return result.data;
 }
