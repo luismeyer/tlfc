@@ -12,6 +12,7 @@
     "declaration": true,
     "esModuleInterop": true,
     "moduleResolution": "Node",
-    "declarationMap": true
+    "declarationMap": true,
+    "noUncheckedIndexedAccess": true
   }
 }

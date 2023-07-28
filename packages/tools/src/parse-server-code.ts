@@ -16,21 +16,19 @@ export function parseServerCode(serverCode: string) {
 
   // search for handler code
   const handlerMatcher = LambdaHandlerRegex.exec(clienCode);
+  const [, handler] = handlerMatcher ?? [];
 
-  if (handlerMatcher) {
-    const [, handler] = handlerMatcher;
-
-    clienCode = clienCode.replaceAll(
-      handler,
-      "/** @tlfc: removed lambda handler **/"
-    );
+  if (handler) {
+    const tlfcComment = "/** @tlfc: removed lambda handler **/";
+    clienCode = clienCode.replaceAll(handler, tlfcComment);
   }
 
-  if (LambdaEnvVarsRegex.test(clienCode)) {
-    clienCode = clienCode.replace(
-      LambdaEnvVarsRegex,
-      "/** @tlfc: removed envVars **/"
-    );
+  // search for env vars
+  const hasEnvVars = LambdaEnvVarsRegex.test(clienCode);
+
+  if (hasEnvVars) {
+    const tlfcComment = "/** @tlfc: removed envVars **/";
+    clienCode = clienCode.replace(LambdaEnvVarsRegex, tlfcComment);
   }
 
   return clienCode;
