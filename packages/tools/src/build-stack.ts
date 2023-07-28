@@ -1,10 +1,10 @@
 import { App, Stack } from "aws-cdk-lib";
 import { RestApi } from "aws-cdk-lib/aws-apigateway";
-import { config } from "dotenv";
 
 import { createLambdaFunction } from "./create-lambda-function";
 import { discoverLambdaEntries } from "./discover-lambda-entries";
 import { build, LambdaOutput } from "./esbuild";
+import { loadEnv } from "./load-env";
 
 class AwsStack extends Stack {
   constructor(app: App, id: string, lambdas: LambdaOutput[]) {
@@ -20,7 +20,7 @@ class AwsStack extends Stack {
 }
 
 export async function buildStack(lambdaEntries?: string[]) {
-  config();
+  loadEnv();
 
   let entries = lambdaEntries;
   if (!entries?.length) {

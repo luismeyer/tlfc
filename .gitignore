@@ -5,5 +5,5 @@ lib
 dist
 *.tsbuildinfo
 cdk.out
-.env
+.env*
 build

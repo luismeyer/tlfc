@@ -10,7 +10,7 @@ export function registerInvokeRoute<
 >(app: Application, functions: LambdaOutput[]) {
   const path = "/2015-03-31/functions/:functionName/invocations";
 
-  console.info(`@tlfc: Register invoke route: ${path}`);
+  console.info(`@tlfc: register invoke route: ${path}`);
 
   app.post(path, async (request, response) => {
     const { headers, body, params } = request;

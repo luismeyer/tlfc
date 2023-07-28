@@ -9,7 +9,7 @@ import { LambdaOutput } from "../esbuild";
 export function registerApiRoute(app: Application, lambda: LambdaOutput) {
   const path = `/${lambda.definition.functionName}`;
 
-  console.info(`@tlfc: Register api route: ${path}`);
+  console.info(`@tlfc: register api route: ${path}`);
 
   app.all(path, async (request, response) => {
     try {
@@ -34,7 +34,7 @@ export function registerApiRoute(app: Application, lambda: LambdaOutput) {
         .header(result.headers)
         .send(result.body);
     } catch (error) {
-      console.info("@tlfc: Api route error", error);
+      console.info("@tlfc: api route error", error);
 
       response.status(500).send();
     }

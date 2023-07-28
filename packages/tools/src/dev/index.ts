@@ -1,12 +1,12 @@
 import { json, raw } from "body-parser";
 import cors from "cors";
-import { config } from "dotenv";
 import express from "express";
 
 import { devConfig } from "@tlfc/core";
 
 import { discoverLambdaEntries } from "../discover-lambda-entries";
 import { buildWatch, LambdaOutput } from "../esbuild";
+import { loadEnv } from "../load-env";
 import { registerApiRoute } from "./register-api-route";
 import { registerInvokeRoute } from "./register-invoke-route";
 
@@ -21,7 +21,7 @@ function createInvokeServer(lambdas: LambdaOutput[]) {
   registerInvokeRoute(invokeApp, lambdas);
 
   return invokeApp.listen(invoke.port, invoke.host, () => {
-    console.info(`@tlfc: Invocation Lambdas at ${invoke.endpoint}`);
+    console.info(`@tlfc: invocation Lambdas listening at ${invoke.endpoint}`);
   });
 }
 
@@ -36,12 +36,12 @@ function createApiServer(lambdas: LambdaOutput[]) {
   });
 
   return apiApp.listen(api.port, api.host, () => {
-    console.info(`@tlfc: Api Lambdas at ${api.endpoint}`);
+    console.info(`@tlfc: api Lambdas listening at ${api.endpoint}`);
   });
 }
 
 export async function dev(lambdaEntries?: string[]) {
-  config();
+  loadEnv();
 
   let entries = lambdaEntries;
   if (!entries?.length) {
