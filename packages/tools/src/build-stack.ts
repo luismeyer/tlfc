@@ -3,7 +3,7 @@ import { RestApi } from "aws-cdk-lib/aws-apigateway";
 import { config } from "dotenv";
 
 import { createLambdaFunction } from "./create-lambda-function";
-import { discoverLambdaEntries } from "./discoverLambdaEntries";
+import { discoverLambdaEntries } from "./discover-lambda-entries";
 import { build, LambdaOutput } from "./esbuild";
 
 class AwsStack extends Stack {

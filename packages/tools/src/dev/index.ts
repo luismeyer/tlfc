@@ -5,7 +5,7 @@ import express from "express";
 
 import { devConfig } from "@tlfc/core";
 
-import { discoverLambdaEntries } from "../discoverLambdaEntries";
+import { discoverLambdaEntries } from "../discover-lambda-entries";
 import { buildWatch, LambdaOutput } from "../esbuild";
 import { registerApiRoute } from "./register-api-route";
 import { registerInvokeRoute } from "./register-invoke-route";
