@@ -35,7 +35,7 @@ function createBuildOptions(
     platform: "node",
     target: "node18",
     format: "cjs",
-    logLevel: "info",
+    logLevel: "error",
     treeShaking: true,
     plugins: [EsbuildPlugin],
   };
