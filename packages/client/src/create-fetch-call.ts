@@ -15,16 +15,17 @@ function createUrl<RequestSchema extends ZodObject<ZodRawShape>>(
   endpointType: EndpointType
 ): string {
   const { api } = readConfig();
-  const base = `${api.endpoint}/${functionName}`;
+  const url = new URL(functionName, api.endpoint);
 
-  if (endpointType !== "GET") {
-    return base;
+  if (endpointType === "GET") {
+    const params = new URLSearchParams(request).toString();
+
+    if (params.length) {
+      return `${url}?${params}`;
+    }
   }
 
-  const params = new URLSearchParams(request).toString();
-  const urlParams = params.length ? `?${params}` : "";
-
-  return `${base}${urlParams}`;
+  return url.toString();
 }
 
 function createBody<RequestSchema extends ZodObject<ZodRawShape>>(
