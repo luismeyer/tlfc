@@ -6,7 +6,7 @@
   },
   "include": ["src"],
   "references": [
-    { "path": "../core" },
+    { "path": "../core/tsconfig.cjs.json" },
     { "path": "../tools" },
     { "path": "../client" },
     { "path": "../server" }

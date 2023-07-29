@@ -48,7 +48,12 @@ export function vitePluginTlfc(
     async transform(code, id) {
       // omit aws-sdk from the bundle
       if (!includeAwsSdk && id.includes("@aws-sdk/client-lambda")) {
-        return "export default null";
+        // rewrite the imports we use in the create-sdk-call.ts file
+        return `
+          export const InvokeCommand = null;
+          export const LambdaClient = null;
+          export default null;
+        `;
       }
 
       if (id.includes("node_modules")) {

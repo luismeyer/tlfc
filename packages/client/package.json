@@ -1,6 +1,7 @@
 {
   "name": "@tlfc/client",
   "version": "1.2.0",
+  "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -13,7 +14,6 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "concurrently": "^8.2.0",
     "typescript": "^5.1.6"
   }
 }

@@ -8,8 +8,8 @@
     "compile:watch": "tsc --build --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "zod": "^3.21.4",
-    "@tlfc/core": "*"
+    "@tlfc/core": "*",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",

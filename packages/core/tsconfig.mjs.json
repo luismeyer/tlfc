@@ -2,9 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "lib",
+    "outDir": "lib/mjs",
     "module": "ESNext"
   },
-  "include": ["src"],
-  "references": [{ "path": "../core/tsconfig.mjs.json" }]
+  "include": ["src"]
 }
