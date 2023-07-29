@@ -1,5 +1,16 @@
 # @tlfc/client
 
+## 1.2.0
+
+### Minor Changes
+
+- 0a8c442: Basic DX improvements
+
+### Patch Changes
+
+- Updated dependencies [0a8c442]
+  - @tlfc/core@1.3.0
+
 ## 1.1.0
 
 ### Minor Changes
