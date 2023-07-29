@@ -6,9 +6,7 @@
   ],
   "scripts": {
     "compile": "turbo compile",
-    "compile:watch": "turbo compile:watch",
-    "dev": " turbo dev",
-    "build": "turbo build"
+    "compile:watch": "turbo compile:watch"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",

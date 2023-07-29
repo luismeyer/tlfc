@@ -6,6 +6,5 @@
     "module": "ESNext",
     "noEmit": true
   },
-  "include": ["./client", "./server"],
-  "references": [{ "path": "../client" }, { "path": "../vite-plugin" }]
+  "include": ["./client", "./server"]
 }
