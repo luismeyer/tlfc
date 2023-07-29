@@ -2,9 +2,17 @@ import { Plugin } from "vite";
 
 import { dev, parseServerCode, ServerImportLiteral } from "@tlfc/tools";
 
-let tlfcExit: () => Promise<void> | undefined;
+let stopTlfcDev: () => Promise<void> | undefined;
 
-export function vitePluginTlfc(): Plugin {
+type VitePluginTlfcOptions = {
+  includeAwsSdk?: boolean;
+};
+
+export function vitePluginTlfc(
+  options: VitePluginTlfcOptions | undefined
+): Plugin {
+  const { includeAwsSdk } = options || {};
+
   return {
     name: "vite-plugin-tlfc",
     enforce: "pre",
@@ -12,11 +20,11 @@ export function vitePluginTlfc(): Plugin {
     configureServer() {
       // don't block vite from restarting
       new Promise(async (resolve) => {
-        if (tlfcExit) {
-          await tlfcExit();
+        if (stopTlfcDev) {
+          await stopTlfcDev();
         }
 
-        tlfcExit = await dev();
+        stopTlfcDev = await dev();
 
         resolve(true);
       });
@@ -24,6 +32,11 @@ export function vitePluginTlfc(): Plugin {
 
     async transform(code, id) {
       const isNodeModule = id.includes("node_modules");
+
+      // omit aws-sdk from the bundle
+      if (!includeAwsSdk && id.includes("@aws-sdk/client-lambda")) {
+        return "export default null";
+      }
 
       if (isNodeModule) {
         return;

@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@tlfc/tools": "*",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vite": "^4.4.0"
   }
 }
