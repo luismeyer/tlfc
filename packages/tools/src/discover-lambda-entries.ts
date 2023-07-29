@@ -31,6 +31,12 @@ export async function discoverLambdaEntries(
     }
 
     if (stats.isFile()) {
+      const ext = path.extname(filepath);
+
+      if (ext !== ".js" && ext !== ".ts") {
+        return;
+      }
+
       const file = fs.readFileSync(filepath, "utf-8");
 
       if (file.includes(ServerImportLiteral) && file.includes("createLambda")) {
