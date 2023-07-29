@@ -9,6 +9,6 @@ type Tools = {
 export function tools(...lambdaEntries: string[]): Tools {
   return {
     buildStack: () => buildStack(lambdaEntries),
-    dev: () => dev(lambdaEntries),
+    dev: () => dev({ lambdaEntries }),
   };
 }

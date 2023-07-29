@@ -5,6 +5,7 @@ import fs from "fs";
 import { handlerFileName } from "./create-lambda-function";
 import { EsbuildPlugin } from "./esbuild-plugin";
 import { AnyLambda } from ".";
+import { log } from "./dev/log";
 
 export type LambdaOutput = {
   entry: string;
@@ -57,7 +58,7 @@ export async function build(entries: string[]): Promise<LambdaOutput[]> {
 
     const { uploadDir, bundleFile } = lambdaOutput(entry);
 
-    console.info(`@tlfc: building lambda: '${entry}'`);
+    log(`building lambda: '${entry}'`);
 
     // seperately build each lambda so we can be sure about the entry file
     const options = createBuildOptions(entry, bundleFile);
@@ -85,7 +86,7 @@ export async function buildWatch(entries: string[]): Promise<LambdaOutput[]> {
     const options = createBuildOptions(entry, bundleFile);
     const context = await esbuild.context(options);
 
-    console.info(`@tlfc: watching lambda: '${entry}'`);
+    log(`watching lambda: '${entry}'`);
 
     // inital build
     await esbuild.build(options);

@@ -21,7 +21,7 @@ program
   .description("Run local lambda dev server.")
   .option("-e, --entries [files...]", "specify entry files")
   .action(async ({ entries }: CommandOptions) => {
-    await dev(entries);
+    await dev({ lambdaEntries: entries });
   });
 
 const BuildStackCommand = "buildStack";

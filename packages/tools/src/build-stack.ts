@@ -5,12 +5,13 @@ import { createAwsLambdaFunction } from "./create-lambda-function";
 import { discoverLambdaEntries } from "./discover-lambda-entries";
 import { build, LambdaOutput } from "./esbuild";
 import { loadEnv } from "./load-env";
+import { log } from "./dev/log";
 
 class AwsStack extends Stack {
   constructor(app: App, id: string, lambdas: LambdaOutput[]) {
     super(app, id);
 
-    console.info(`@tlfc: creating aws stack: '${id}'`);
+    log(`creating aws stack: '${id}'`);
 
     const api = new RestApi(this, "tlfcApi", {
       restApiName: "@tlfc Api",

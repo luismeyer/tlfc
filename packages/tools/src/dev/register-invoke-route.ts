@@ -3,6 +3,7 @@ import { ZodObject, ZodRawShape } from "zod";
 
 import { invokeLambda } from "./invoke-lambda";
 import { LambdaOutput } from "../esbuild";
+import { log } from "./log";
 
 export function registerInvokeRoute<
   RequestSchema extends ZodObject<ZodRawShape>,
@@ -10,7 +11,7 @@ export function registerInvokeRoute<
 >(app: Application, functions: LambdaOutput[]) {
   const path = "/2015-03-31/functions/:functionName/invocations";
 
-  console.info(`@tlfc: register invoke route: ${path}`);
+  log(`register invoke route: ${path}`);
 
   app.post(path, async (request, response) => {
     const { headers, body, params } = request;
@@ -39,7 +40,7 @@ export function registerInvokeRoute<
 
       return response.status(200).send(JSON.stringify(result));
     } catch (error) {
-      console.error("@tlfc: Handler Error", error);
+      log("handler error", error);
 
       if (error instanceof Error) {
         return response.status(500).send({

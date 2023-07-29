@@ -6,6 +6,7 @@ import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 import { DefaultEndpointType } from "@tlfc/core";
 
 import { LambdaOutput } from "./esbuild";
+import { log } from "./dev/log";
 
 export const handlerFileName = "index";
 const handler = `${handlerFileName}.default.handler`;
@@ -17,7 +18,7 @@ export const createAwsLambdaFunction = (
 ) => {
   const { functionName, envVariables, endpointType } = definition;
 
-  console.info(`@tlfc: creating aws lambda function: '${functionName}'`);
+  log(`creating aws lambda function: '${functionName}'`);
 
   const environment = envVariables.reduce(
     (acc, envVar) => ({

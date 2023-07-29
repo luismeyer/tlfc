@@ -1,5 +1,6 @@
 import { globSync } from "glob";
 import dotenv from "dotenv";
+import { log } from "./dev/log";
 
 const DotenvOptions: dotenv.DotenvConfigOptions = { override: true };
 export function loadEnv() {
@@ -12,6 +13,6 @@ export function loadEnv() {
   const varNames = Object.keys(env.parsed ?? {}).join("', '");
 
   if (varNames.length) {
-    console.info(`@tlfc: loaded env vars: '${varNames}'`);
+    log(`loaded env vars: '${varNames}'`);
   }
 }

@@ -9,6 +9,7 @@ import { buildWatch, LambdaOutput } from "../esbuild";
 import { loadEnv } from "../load-env";
 import { registerApiRoute } from "./register-api-route";
 import { registerInvokeRoute } from "./register-invoke-route";
+import { disableLogging, log } from "./log";
 
 const { api, invoke } = devConfig;
 
@@ -21,7 +22,7 @@ function createInvokeServer(lambdas: LambdaOutput[]) {
   registerInvokeRoute(invokeApp, lambdas);
 
   return invokeApp.listen(invoke.port, invoke.host, () => {
-    console.info(`@tlfc: invocation Lambdas listening at ${invoke.endpoint}`);
+    log(`invocation Lambdas listening at ${invoke.endpoint}`);
   });
 }
 
@@ -36,11 +37,20 @@ function createApiServer(lambdas: LambdaOutput[]) {
   });
 
   return apiApp.listen(api.port, api.host, () => {
-    console.info(`@tlfc: api Lambdas listening at ${api.endpoint}`);
+    log(`api Lambdas listening at ${api.endpoint}`);
   });
 }
 
-export async function dev(lambdaEntries?: string[]) {
+type DevOptions = {
+  lambdaEntries?: string[];
+  quiet?: boolean;
+};
+
+export async function dev({ lambdaEntries, quiet }: DevOptions) {
+  if (quiet) {
+    disableLogging();
+  }
+
   loadEnv();
 
   let entries = lambdaEntries;
@@ -62,7 +72,7 @@ export async function dev(lambdaEntries?: string[]) {
 
     isExiting = true;
 
-    console.info("@tlfc: stopping dev servers...");
+    log("stopping dev servers...");
 
     const invokePromise = new Promise((resolve) => {
       invokeServer.close(resolve);

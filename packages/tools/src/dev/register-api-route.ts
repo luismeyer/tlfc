@@ -5,11 +5,12 @@ import { getQueryStringParameters } from "./get-query-string-parameters";
 import { getRequestHeaders } from "./get-request-headers";
 import { invokeLambda } from "./invoke-lambda";
 import { LambdaOutput } from "../esbuild";
+import { log } from "./log";
 
 export function registerApiRoute(app: Application, lambda: LambdaOutput) {
   const path = `/${lambda.definition.functionName}`;
 
-  console.info(`@tlfc: register api route: ${path}`);
+  log(`register api route: ${path}`);
 
   app.all(path, async (request, response) => {
     try {
@@ -34,7 +35,7 @@ export function registerApiRoute(app: Application, lambda: LambdaOutput) {
         .header(result.headers)
         .send(result.body);
     } catch (error) {
-      console.info("@tlfc: api route error", error);
+      log("api route error", error);
 
       response.status(500).send();
     }
