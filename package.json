@@ -2,11 +2,14 @@
   "name": "root",
   "version": "1.0.0",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
+    "build": "turbo build",
     "compile": "turbo compile",
-    "compile:watch": "turbo compile:watch"
+    "compile:watch": "turbo compile:watch",
+    "dev": "turbo dev"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",

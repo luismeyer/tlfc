@@ -8,7 +8,7 @@ export default defineConfig({
   },
   build: {
     commonjsOptions: {
-      include: [/@tlfc\/client/],
+      include: [/client/, /node_modules/],
     },
   },
 });

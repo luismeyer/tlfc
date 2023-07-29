@@ -3,7 +3,7 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build", "compile"],
-      "inputs": ["src/**/*"],
+      "inputs": ["src/**/*", "vite.config.js"],
       "outputs": ["build/**/*"]
     },
     "compile": {
