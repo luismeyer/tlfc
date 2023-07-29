@@ -14,9 +14,9 @@ export async function discoverLambdaEntries(
   const promises = dirContents.map(async (content) => {
     const filepath = path.join(dir, content);
 
-    // Ignore node_modules and dist dir
     if (
       filepath.includes("/node_modules/") ||
+      filepath.includes("/cdk.out/") ||
       filepath.includes(`/${DistDirName}/`)
     ) {
       return;
