@@ -15,7 +15,8 @@
     "@tlfc/core": "*",
     "@tlfc/server": "*",
     "@tlfc/tools": "*",
-    "commander": "^11.0.0"
+    "commander": "^11.0.0",
+    "cdk": "^2.87.0"
   },
   "devDependencies": {
     "typescript": "^5.1.6"
