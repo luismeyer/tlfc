@@ -2,23 +2,24 @@ import { Plugin } from "vite";
 
 import { dev, parseServerCode, ServerImportLiteral } from "@tlfc/tools";
 
-export function vitePluginTlfc(): Plugin {
-  let isDev = false;
+let tlfcExit: () => Promise<void> | undefined;
 
+export function vitePluginTlfc(): Plugin {
   return {
     name: "vite-plugin-tlfc",
     enforce: "pre",
 
-    configResolved(resolvedConfig) {
-      // store the resolved config
-      isDev = resolvedConfig.command === "serve";
-    },
+    configureServer() {
+      // don't block vite from restarting
+      new Promise(async (resolve) => {
+        if (tlfcExit) {
+          await tlfcExit();
+        }
 
-    async configureServer() {
-      if (isDev) {
-        // start tlfc dev server
-        await dev();
-      }
+        tlfcExit = await dev();
+
+        resolve(true);
+      });
     },
 
     async transform(code, id) {

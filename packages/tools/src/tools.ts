@@ -3,7 +3,7 @@ import { dev } from "./dev";
 
 type Tools = {
   buildStack: () => ReturnType<typeof buildStack>;
-  dev: () => Promise<void>;
+  dev: () => Promise<() => Promise<void>>;
 };
 
 export function tools(...lambdaEntries: string[]): Tools {

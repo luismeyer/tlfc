@@ -64,10 +64,15 @@ export async function dev(lambdaEntries?: string[]) {
 
     console.info("@tlfc: stopping dev servers...");
 
-    invokeServer.close();
-    apiServer.close();
+    const invokePromise = new Promise((resolve) => {
+      invokeServer.close(resolve);
+    });
 
-    process.exit(0);
+    const apiPromise = new Promise((resolve) => {
+      apiServer.close(resolve);
+    });
+
+    await Promise.all([invokePromise, apiPromise]);
   };
 
   //catches ctrl+c event
@@ -79,4 +84,6 @@ export async function dev(lambdaEntries?: string[]) {
 
   //catches uncaught exceptions
   process.on("uncaughtException", handleExit);
+
+  return handleExit;
 }

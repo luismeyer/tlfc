@@ -13,7 +13,7 @@ export type LambdaOutput = {
   definition: AnyLambda;
 };
 
-export const DistDirName = "dist";
+export const DistDirName = ".tlfc";
 
 export const outdir = path.join(process.cwd(), DistDirName);
 
@@ -87,9 +87,13 @@ export async function buildWatch(entries: string[]): Promise<LambdaOutput[]> {
 
     console.info(`@tlfc: watching lambda: '${entry}'`);
 
-    await context.watch();
+    // inital build
+    await esbuild.build(options);
 
     const module = await import(bundleFile);
+
+    // start watch
+    await context.watch();
 
     return {
       entry,

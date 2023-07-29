@@ -3,28 +3,30 @@ import fs from "fs";
 
 import { LambdaOutput } from "../esbuild";
 
-const hashMap = new Map<string, string>();
+const bundleHashMap = new Map<string, string>();
+
+function createHash(content: crypto.BinaryLike) {
+  const hash = crypto.createHash("sha256");
+  hash.update(content);
+  return hash.digest("hex");
+}
 
 async function createFileHash(file: string) {
-  const hash = crypto.createHash("sha256");
-
   const content = await fs.promises.readFile(file);
-  hash.update(content);
-
-  return hash.digest("hex");
+  return createHash(content);
 }
 
 export async function invokeLambda(
   { bundleFile }: LambdaOutput,
   event: unknown
 ) {
-  const hash = await createFileHash(bundleFile);
+  const fileHash = await createFileHash(bundleFile);
 
   // use the latest bundle when the file hash changed
-  if (hashMap.get(bundleFile) !== hash) {
+  if (bundleHashMap.get(bundleFile) !== fileHash) {
     require.cache[bundleFile] = undefined;
 
-    hashMap.set(bundleFile, hash);
+    bundleHashMap.set(bundleFile, fileHash);
   }
 
   const lambdaBundle = await import(bundleFile);
