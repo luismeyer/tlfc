@@ -10,12 +10,14 @@ import { LambdaOutput } from "./esbuild";
 export const handlerFileName = "index";
 const handler = `${handlerFileName}.default.handler`;
 
-export const createLambdaFunction = (
+export const createAwsLambdaFunction = (
   stack: Stack,
   restApi: RestApi,
   { definition, uploadDir }: LambdaOutput
 ) => {
   const { functionName, envVariables, endpointType } = definition;
+
+  console.info(`@tlfc: creating aws lambda function: '${functionName}'`);
 
   const environment = envVariables.reduce(
     (acc, envVar) => ({
@@ -37,15 +39,13 @@ export const createLambdaFunction = (
     },
   });
 
-  if (restApi) {
-    const integration = new LambdaIntegration(awsLambda);
+  const integration = new LambdaIntegration(awsLambda);
 
-    restApi.root
-      .addResource(functionName, {
-        defaultCorsPreflightOptions: { allowOrigins: Cors.ALL_ORIGINS },
-      })
-      .addMethod(endpointType ?? DefaultEndpointType, integration);
-  }
+  restApi.root
+    .addResource(functionName, {
+      defaultCorsPreflightOptions: { allowOrigins: Cors.ALL_ORIGINS },
+    })
+    .addMethod(endpointType ?? DefaultEndpointType, integration);
 
   // TODO: use more granular permissions
   const statement = new PolicyStatement();

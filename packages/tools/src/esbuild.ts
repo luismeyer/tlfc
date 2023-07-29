@@ -57,6 +57,8 @@ export async function build(entries: string[]): Promise<LambdaOutput[]> {
 
     const { uploadDir, bundleFile } = lambdaOutput(entry);
 
+    console.info(`@tlfc: building lambda: '${entry}'`);
+
     // seperately build each lambda so we can be sure about the entry file
     const options = createBuildOptions(entry, bundleFile);
     await esbuild.build(options);
@@ -82,6 +84,8 @@ export async function buildWatch(entries: string[]): Promise<LambdaOutput[]> {
 
     const options = createBuildOptions(entry, bundleFile);
     const context = await esbuild.context(options);
+
+    console.info(`@tlfc: watching lambda: '${entry}'`);
 
     await context.watch();
 
