@@ -19,7 +19,7 @@
     "@tlfc/client": "*",
     "@tlfc/server": "*",
     "@tlfc/vite": "*",
-    "@types/node": "^20.4.1",
+    "@types/node": "^20.4.5",
     "cdk": "^2.87.0",
     "concurrently": "^8.2.0",
     "typescript": "^5.1.6",
