@@ -20,11 +20,11 @@ type DevConfig = {
   };
 };
 
-const invokePort = 3002;
+const invokePort = 56789;
 const invokeHost = "localhost";
 const invokeEndpoint = `http://${invokeHost}:${invokePort}`;
 
-const apiPort = 3000;
+const apiPort = 56790;
 const apiHost = "localhost";
 const apiEndpoint = `http://${apiHost}:${apiPort}`;
 
