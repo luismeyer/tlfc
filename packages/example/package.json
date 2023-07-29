@@ -2,17 +2,16 @@
   "name": "@tlfc/example",
   "private": true,
   "scripts": {
+    "client:build": "vite build",
     "client:compile": "tsc -p tsconfig.client.json",
     "client:compile:watch": "tsc -p tsconfig.client.json --watch --preserveWatchOutput",
-    "client:dev": "vite",
     "compile": "concurrently 'npm:server:compile' 'npm:client:compile'",
     "compile:watch": "concurrently 'npm:server:compile:watch' 'npm:client:compile:watch'",
     "deploy": "npx cdk deploy --app 'npm run server:build'",
-    "dev": "concurrently 'npm:server:dev' 'npm:client:dev'",
-    "server:build": "node ../cli/lib/index.js build",
+    "dev": "vite",
+    "server:build": "tlfc build",
     "server:compile": "tsc -p tsconfig.server.json",
-    "server:compile:watch": "tsc -p tsconfig.server.json --watch --preserveWatchOutput",
-    "server:dev": "node ../cli/lib/index.js dev"
+    "server:compile:watch": "tsc -p tsconfig.server.json --watch --preserveWatchOutput"
   },
   "devDependencies": {
     "@tlfc/cli": "*",
