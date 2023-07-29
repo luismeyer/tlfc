@@ -8,5 +8,7 @@ export function loadEnv() {
 
   const varNames = Object.keys(env.parsed ?? {}).join("', '");
 
-  console.info(`@tlfc: loaded env vars: '${varNames}'`);
+  if (varNames.length) {
+    console.info(`@tlfc: loaded env vars: '${varNames}'`);
+  }
 }
