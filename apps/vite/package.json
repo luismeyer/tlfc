@@ -7,10 +7,11 @@
     "dev": "vite"
   },
   "devDependencies": {
-    "@tlfc/cli": "^1.1.0",
-    "@tlfc/client": "^1.2.0",
-    "@tlfc/server": "^1.3.0",
-    "@tlfc/vite": "^1.2.0",
+    "@tlfc/cli": "file:../../packages/cli",
+    "@tlfc/client": "file:../../packages/client",
+    "@tlfc/server": "file:../../packages/server",
+    "@tlfc/vite": "file:../../packages/vite-plugin",
+    "@tlfc/tools": "file:../../packages/tools",
     "@types/node": "^20.4.5",
     "concurrently": "^8.2.0",
     "typescript": "^5.1.6",
