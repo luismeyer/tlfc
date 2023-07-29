@@ -2,7 +2,7 @@
   "name": "@tlfc/example",
   "private": true,
   "scripts": {
-    "client:build": "vite build",
+    "build": "vite build",
     "client:compile": "tsc -p tsconfig.client.json",
     "client:compile:watch": "tsc -p tsconfig.client.json --watch --preserveWatchOutput",
     "compile": "concurrently 'npm:server:compile' 'npm:client:compile'",

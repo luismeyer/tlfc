@@ -6,10 +6,6 @@
       "inputs": ["src/**/*"],
       "outputs": ["build/**/*"]
     },
-    "build:watch": {
-      "inputs": ["src/**/*"],
-      "outputs": ["build/**/*"]
-    },
     "compile": {
       "dependsOn": ["^compile"],
       "inputs": ["src/**/*", "*.tsbuildinfo"],
