@@ -41,8 +41,6 @@ export type Lambda<
   // client side code
   call: LambdaCall<RequestSchema, ResponseSchema>;
 
-  // used to finde the entry for the deployment
-  fullFilePath: string;
   endpointType?: EndpointType;
   envVariables: string[];
 };

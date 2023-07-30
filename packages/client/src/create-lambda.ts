@@ -27,7 +27,6 @@ export function createLambda<
       );
     },
     call,
-    fullFilePath: "",
     endpointType: endpointType,
     envVariables: options?.envVariables ?? [],
   };
