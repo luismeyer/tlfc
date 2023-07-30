@@ -19,7 +19,6 @@
     "mjs:compile:watch": "npm run mjs:compile --preserveWatchOutput"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.363.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {

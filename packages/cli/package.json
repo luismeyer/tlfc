@@ -11,9 +11,6 @@
     "compile:watch": "tsc --build --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@tlfc/client": "*",
-    "@tlfc/core": "*",
-    "@tlfc/server": "*",
     "@tlfc/tools": "*",
     "commander": "^11.0.0",
     "cdk": "^2.87.0"
