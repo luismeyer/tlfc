@@ -8,6 +8,7 @@ export default createLambda(
     responseSchema: z.object({ env: z.string() }),
     functionName: "envLambda",
     envVariables: ["SOME_ENV_VAR"],
+    httpDisabled: true,
   },
   async (event) => {
     const env = process.env.SOME_ENV_VAR;

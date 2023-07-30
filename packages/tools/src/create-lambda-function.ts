@@ -3,8 +3,6 @@ import { Cors, LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 
-import { DefaultEndpointType } from "@tlfc/core";
-
 import { LambdaOutput } from "./esbuild";
 import { log } from "./dev/log";
 
@@ -16,7 +14,7 @@ export const createAwsLambdaFunction = (
   restApi: RestApi,
   { definition, uploadDir }: LambdaOutput
 ) => {
-  const { functionName, envVariables, endpointType } = definition;
+  const { functionName, envVariables, endpointType, httpDisabled } = definition;
 
   log(`creating aws lambda function: '${functionName}'`);
 
@@ -42,11 +40,13 @@ export const createAwsLambdaFunction = (
 
   const integration = new LambdaIntegration(awsLambda);
 
-  restApi.root
-    .addResource(functionName, {
-      defaultCorsPreflightOptions: { allowOrigins: Cors.ALL_ORIGINS },
-    })
-    .addMethod(endpointType ?? DefaultEndpointType, integration);
+  if (!httpDisabled) {
+    restApi.root
+      .addResource(functionName, {
+        defaultCorsPreflightOptions: { allowOrigins: Cors.ALL_ORIGINS },
+      })
+      .addMethod(endpointType, integration);
+  }
 
   // TODO: use more granular permissions
   const statement = new PolicyStatement();

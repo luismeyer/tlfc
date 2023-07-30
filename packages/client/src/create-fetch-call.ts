@@ -84,12 +84,6 @@ export function createLambdaFetchCall<
   ResponseSchema
 > {
   return function (request: z.infer<RequestSchema>) {
-    if (!endpointType) {
-      throw new Error(
-        "Could not create fetch call function. Did you forget to set the endpointType on you Lambda?"
-      );
-    }
-
     const call = createFetchCall(responseSchema, functionName, endpointType);
 
     return call(request);

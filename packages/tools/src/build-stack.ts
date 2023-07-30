@@ -31,7 +31,7 @@ export async function buildStack(lambdaEntries?: string[]) {
   }
 
   if (!entries?.length) {
-    throw new Error("@tlfc: Error, no lambda entries found!");
+    throw new Error("@tlfc Error: No lambda entries found!");
   }
 
   const outputs = await build(entries);

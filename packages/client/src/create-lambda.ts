@@ -1,6 +1,11 @@
 import { ZodObject, ZodRawShape } from "zod";
 
-import { Lambda, LambdaOptions } from "@tlfc/core";
+import {
+  DefaultEndpointType,
+  Lambda,
+  LambdaCall,
+  LambdaOptions,
+} from "@tlfc/core";
 
 import { createLambdaFetchCall } from "./create-fetch-call";
 import { createLambdaSdkCall } from "./create-sdk-call";
@@ -11,12 +16,24 @@ export function createLambda<
 >(
   options: LambdaOptions<RequestSchema, ResponseSchema>
 ): Lambda<RequestSchema, ResponseSchema> {
-  const { functionName, endpointType } = options;
+  const { functionName, endpointType, httpDisabled } = options;
 
-  let call = createLambdaFetchCall(options);
+  let call: LambdaCall<RequestSchema, ResponseSchema> | undefined;
 
-  if (typeof window === "undefined") {
+  const isBrowser = typeof window !== "undefined";
+
+  if (!httpDisabled && isBrowser) {
+    call = createLambdaFetchCall(options);
+  }
+
+  if (!isBrowser) {
     call = createLambdaSdkCall(options);
+  }
+
+  if (!call) {
+    throw new Error(
+      "@tlfc Error: Cannot create lambda call. Are you trying to call a lambda from the browser but set 'httpDisabled' to true."
+    );
   }
 
   return {
@@ -27,7 +44,8 @@ export function createLambda<
       );
     },
     call,
-    endpointType: endpointType,
+    endpointType: endpointType ?? DefaultEndpointType,
     envVariables: options?.envVariables ?? [],
+    httpDisabled: Boolean(httpDisabled),
   };
 }

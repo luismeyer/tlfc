@@ -1,6 +1,11 @@
 import { ZodObject, ZodRawShape } from "zod";
 
-import { Lambda, LambdaHandler, LambdaOptions } from "@tlfc/core";
+import {
+  DefaultEndpointType,
+  Lambda,
+  LambdaHandler,
+  LambdaOptions,
+} from "@tlfc/core";
 
 import { createLambdaHandler } from "./create-lambda-handler";
 
@@ -11,7 +16,7 @@ export function createLambda<
   options: LambdaOptions<RequestSchema, ResponseSchema>,
   handler: LambdaHandler<RequestSchema, ResponseSchema>
 ): Lambda<RequestSchema, ResponseSchema> {
-  const { functionName, endpointType } = options;
+  const { functionName, endpointType, httpDisabled } = options;
 
   return {
     functionName: functionName,
@@ -21,7 +26,8 @@ export function createLambda<
         "@tlfc Error: Cannot call lambda in server code. Did you forget to use a @tlfc plugin?"
       );
     },
-    endpointType: endpointType,
+    endpointType: endpointType ?? DefaultEndpointType,
     envVariables: options?.envVariables ?? [],
+    httpDisabled: Boolean(httpDisabled),
   };
 }

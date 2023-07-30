@@ -26,6 +26,11 @@ export type LambdaOptions<
    * into the lambda environment during the deployment
    */
   envVariables?: string[];
+  /**
+   * Hide the lambda from the HTTP API Gateway.
+   * The lambda can only be invoked from a Node environment with the aws-sdk.
+   */
+  httpDisabled?: boolean;
 };
 
 export type Lambda<
@@ -41,8 +46,9 @@ export type Lambda<
   // client side code
   call: LambdaCall<RequestSchema, ResponseSchema>;
 
-  endpointType?: EndpointType;
+  endpointType: EndpointType;
   envVariables: string[];
+  httpDisabled: boolean;
 };
 
 type LambdaFunction<
