@@ -1,5 +1,11 @@
 # @tlfc/core
 
+## 1.4.0
+
+### Minor Changes
+
+- 0c16a41: Minor bug fixes and library improvements
+
 ## 1.3.0
 
 ### Minor Changes

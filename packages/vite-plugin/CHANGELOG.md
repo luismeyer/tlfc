@@ -1,5 +1,11 @@
 # @tlfc/vite
 
+## 1.3.0
+
+### Minor Changes
+
+- 0c16a41: Minor bug fixes and library improvements
+
 ## 1.2.0
 
 ### Minor Changes

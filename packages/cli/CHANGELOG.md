@@ -1,5 +1,16 @@
 # @tlfc/cli
 
+## 1.2.0
+
+### Minor Changes
+
+- 0c16a41: Minor bug fixes and library improvements
+
+### Patch Changes
+
+- Updated dependencies [0c16a41]
+  - @tlfc/tools@1.5.0
+
 ## 1.1.0
 
 ### Minor Changes
