@@ -3,17 +3,17 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build", "compile"],
-      "inputs": ["src/**/*", "vite.config.js"],
-      "outputs": ["build/**/*"]
+      "inputs": ["src/**/*.ts", "vite.config.js"],
+      "outputs": ["build/**"]
     },
     "compile": {
       "dependsOn": ["^compile"],
-      "inputs": ["src/**/*", "*.tsbuildinfo"],
-      "outputs": ["lib/**/*"]
+      "inputs": ["src/**/*.ts", "*.tsbuildinfo", "tsconfig.json"],
+      "outputs": ["lib/**"]
     },
     "compile:watch": {
-      "inputs": ["src/**/*", "*.tsbuildinfo"],
-      "outputs": ["lib/**/*"],
+      "inputs": ["src/**/*.ts", "*.tsbuildinfo", "tsconfig.json"],
+      "outputs": ["lib/**"],
       "cache": false,
       "persistent": true
     },
