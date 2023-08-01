@@ -38,9 +38,9 @@ export const createAwsLambdaFunction = (
     },
   });
 
-  const integration = new LambdaIntegration(awsLambda);
-
   if (!httpDisabled) {
+    const integration = new LambdaIntegration(awsLambda);
+
     restApi.root
       .addResource(functionName, {
         defaultCorsPreflightOptions: { allowOrigins: Cors.ALL_ORIGINS },
