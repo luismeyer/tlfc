@@ -7,12 +7,13 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "strict": true,
-    "module": "CommonJS",
     "target": "ESNext",
     "declaration": true,
     "esModuleInterop": true,
     "moduleResolution": "Node",
     "declarationMap": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "module": "ESNext",
+    "emitDeclarationOnly": true
   }
 }

@@ -6,6 +6,7 @@ import { handlerFileName } from "./create-lambda-function";
 import { EsbuildPlugin } from "./esbuild-plugin";
 import { AnyLambda } from ".";
 import { log } from "./dev/log";
+import { importLambdaDefinition } from "./import-lambda-definition";
 
 export type LambdaOutput = {
   entry: string;
@@ -19,7 +20,7 @@ export const DistDirName = ".tlfc";
 export const outdir = path.join(process.cwd(), DistDirName);
 
 function lambdaOutput(lambdaEntry: string) {
-  const bundleFilename = `${handlerFileName}.js`;
+  const bundleFilename = `${handlerFileName}.cjs`;
   const uploadDir = path.join(outdir, path.basename(lambdaEntry));
 
   return { uploadDir, bundleFile: path.join(uploadDir, bundleFilename) };
@@ -64,13 +65,13 @@ export async function build(entries: string[]): Promise<LambdaOutput[]> {
     const options = createBuildOptions(entry, bundleFile);
     await esbuild.build(options);
 
-    const module = await import(bundleFile);
+    const definition = await importLambdaDefinition(bundleFile);
 
     return {
       entry,
       bundleFile,
       uploadDir,
-      definition: module.default,
+      definition,
     };
   });
 
@@ -91,7 +92,7 @@ export async function buildWatch(entries: string[]): Promise<LambdaOutput[]> {
     // inital build
     await esbuild.build(options);
 
-    const module = await import(bundleFile);
+    const definition = await importLambdaDefinition(bundleFile);
 
     // start watch
     await context.watch();
@@ -100,7 +101,7 @@ export async function buildWatch(entries: string[]): Promise<LambdaOutput[]> {
       entry,
       bundleFile,
       uploadDir,
-      definition: module.default,
+      definition,
     };
   });
 

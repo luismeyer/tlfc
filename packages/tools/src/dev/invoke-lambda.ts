@@ -1,35 +1,50 @@
-import crypto from "crypto";
 import fs from "fs";
+import path from "path";
+import os from "os";
+import { APIGatewayProxyEvent, Context } from "aws-lambda";
 
 import { LambdaOutput } from "../esbuild";
+import { log } from "./log";
+import { importLambdaDefinition } from "../import-lambda-definition";
 
-const bundleHashMap = new Map<string, string>();
+const bundles = new Map<string, string>();
 
-function createHash(content: crypto.BinaryLike) {
-  const hash = crypto.createHash("sha256");
-  hash.update(content);
-  return hash.digest("hex");
-}
-
-async function createFileHash(file: string) {
-  const content = await fs.promises.readFile(file);
-  return createHash(content);
-}
+const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "tlfc-"));
 
 export async function invokeLambda(
-  { bundleFile }: LambdaOutput,
+  { bundleFile, definition: { functionName } }: LambdaOutput,
   event: unknown
 ) {
-  const fileHash = await createFileHash(bundleFile);
+  // this is a hack to always load the latest cjs bundle with the import.
+  // By copying the bundle to a new file the esm import cache is missed
+  fs.watch(bundleFile, async () => {
+    log(functionName, "changed. Busting the import cache...");
 
-  // use the latest bundle when the file hash changed
-  if (bundleHashMap.get(bundleFile) !== fileHash) {
-    require.cache[bundleFile] = undefined;
+    const prevTmpBundleFile = bundles.get(bundleFile);
+    if (prevTmpBundleFile) {
+      await fs.promises.rm(prevTmpBundleFile, { force: true });
+    }
 
-    bundleHashMap.set(bundleFile, fileHash);
-  }
+    const outputFilename = path.basename(bundleFile);
+    const filename = `${Date.now()}-${functionName}-${outputFilename}`;
+    const tmpBundleFile = path.join(tmpDir, filename);
 
-  const lambdaBundle = await import(bundleFile);
+    try {
+      await fs.promises.copyFile(bundleFile, tmpBundleFile);
 
-  return lambdaBundle.default.handler(event);
+      bundles.set(bundleFile, tmpBundleFile);
+    } catch (error) {
+      log(`failed to bust import cache: ${error}`);
+    }
+  });
+
+  const cacheBustingBundle = bundles.get(bundleFile) ?? bundleFile;
+
+  const definition = await importLambdaDefinition(cacheBustingBundle);
+
+  return definition.handler(
+    event as APIGatewayProxyEvent,
+    {} as Context,
+    () => undefined
+  );
 }

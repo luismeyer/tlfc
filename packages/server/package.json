@@ -1,9 +1,11 @@
 {
   "name": "@tlfc/server",
   "version": "1.4.0",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
+    "build": "node esbuild.mjs",
+    "build:watch": "node esbuild.mjs --watch",
     "compile": "tsc --build",
     "compile:watch": "tsc --build --watch --preserveWatchOutput"
   },

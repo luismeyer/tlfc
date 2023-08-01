@@ -1,4 +1,4 @@
-import { json, raw } from "body-parser";
+import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 
@@ -16,7 +16,7 @@ const { api, invoke } = devConfig;
 function createInvokeServer(lambdas: LambdaOutput[]) {
   // this app handles aws-sdk invocations
   const invokeApp = express();
-  invokeApp.use(raw());
+  invokeApp.use(bodyParser.raw());
   invokeApp.use(cors());
 
   registerInvokeRoute(invokeApp, lambdas);
@@ -30,7 +30,7 @@ function createApiServer(lambdas: LambdaOutput[]) {
   // this app handles fetch invocations
   const apiApp = express();
   apiApp.use(cors());
-  apiApp.use(json());
+  apiApp.use(bodyParser.json());
 
   lambdas.forEach((lambda) => {
     registerApiRoute(apiApp, lambda);

@@ -1,17 +1,21 @@
 {
   "name": "@tlfc/vite-example",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "vite build",
+    "compile": "tsc --build",
+    "compile:watch": "tsc --build --watch --preserveWatchOutput",
     "deploy": "tlfc deploy",
-    "dev": "vite"
+    "dev": "vite",
+    "serve": "vite serve"
   },
   "devDependencies": {
     "@tlfc/cli": "*",
     "@tlfc/client": "*",
     "@tlfc/server": "*",
-    "@tlfc/vite": "*",
     "@tlfc/tools": "*",
+    "@tlfc/vite": "*",
     "@types/node": "^20.4.5",
     "concurrently": "^8.2.0",
     "typescript": "^5.1.6",

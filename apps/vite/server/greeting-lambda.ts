@@ -12,7 +12,7 @@ export default createLambda(
   },
   async (event) => {
     if (event.disabled) {
-      return { message: "disabled" };
+      return { message: "you set disabled to true" };
     }
 
     const { message } = await calcGreetingLambda.call({

@@ -1,21 +1,25 @@
 {
   "name": "@tlfc/cli",
   "version": "1.2.0",
-  "main": "lib/index.js",
+  "type": "module",
+  "main": "dist/index.js",
   "types": "lib/index.d.ts",
   "bin": {
-    "tlfc": "lib/index.js"
+    "tlfc": "dist/index.js"
   },
   "scripts": {
+    "build": "node esbuild.mjs",
+    "build:watch": "node esbuild.mjs --watch",
     "compile": "tsc --build",
     "compile:watch": "tsc --build --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@tlfc/tools": "*",
-    "commander": "^11.0.0",
-    "cdk": "^2.87.0"
+    "cdk": "^2.87.0",
+    "commander": "^11.0.0"
   },
   "devDependencies": {
+    "esbuild": "^0.18.11",
     "typescript": "^5.1.6"
   }
 }

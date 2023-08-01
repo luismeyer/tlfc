@@ -1,22 +1,14 @@
 {
   "name": "@tlfc/core",
   "version": "1.4.0",
-  "exports": {
-    ".": {
-      "import": "./lib/mjs/index.js",
-      "require": "./lib/cjs/index.js"
-    }
-  },
-  "main": "lib/cjs/index.js",
-  "module": "lib/mjs/index.js",
-  "types": "lib/cjs/index.d.ts",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "cjs:compile": "tsc -p tsconfig.cjs.json",
-    "cjs:compile:watch": "npm run cjs:compile --watch --preserveWatchOutput",
-    "compile": "concurrently './pjsons.sh' 'npm:cjs:compile' 'npm:mjs:compile'",
-    "compile:watch": "concurrently './pjsons.sh' 'npm:cjs:compile:watch' 'npm:mjs:compile:watch'",
-    "mjs:compile": "tsc -p tsconfig.mjs.json",
-    "mjs:compile:watch": "npm run mjs:compile --preserveWatchOutput"
+    "build": "node esbuild.mjs",
+    "build:watch": "node esbuild.mjs --watch",
+    "compile": "tsc",
+    "compile:watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
     "zod": "^3.21.4"
@@ -25,6 +17,7 @@
     "@types/aws-lambda": "^8.10.119",
     "@types/node": "^20.4.5",
     "concurrently": "^8.2.0",
+    "esbuild": "^0.18.11",
     "typescript": "^5.1.6"
   }
 }
