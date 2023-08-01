@@ -33,6 +33,7 @@ function createBuildOptions(
   return {
     entryPoints: [entry],
     outfile,
+    external: ["@aws-sdk/client-lambda"],
     bundle: true,
     platform: "node",
     target: "node18",
