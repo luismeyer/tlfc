@@ -3,18 +3,18 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["src/**/*.ts", "vite.config.js", "esbuild.mjs"],
-      "outputs": ["build/**"]
+      "inputs": ["src/**/*", "vite.config.js", "esbuild.mjs"],
+      "outputs": ["dist/**"]
     },
     "build:watch": {
       "inputs": ["src/**/*.ts", "vite.config.js", "esbuild.mjs"],
-      "outputs": ["build/**"],
+      "outputs": ["dist/**"],
       "cache": false,
       "persistent": true
     },
     "compile": {
       "dependsOn": ["^compile"],
-      "inputs": ["src/**/*.ts", "*.tsbuildinfo", "tsconfig.json"],
+      "inputs": ["src/**/*", "*.tsbuildinfo", "tsconfig.json"],
       "outputs": ["lib/**"]
     },
     "compile:watch": {
