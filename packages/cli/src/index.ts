@@ -31,7 +31,7 @@ program
   .description("Build cdk stack.")
   .option("-e, --entries [files...]", "specify entry files")
   .action(async ({ entries }: CommandOptions) => {
-    await buildStack(entries);
+    await buildStack({ lambdaEntries: entries });
   });
 
 program

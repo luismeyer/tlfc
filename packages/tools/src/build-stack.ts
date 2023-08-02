@@ -22,7 +22,15 @@ class AwsStack extends Stack {
   }
 }
 
-export async function buildStack(lambdaEntries?: string[]) {
+export type BuildStackOptions = {
+  lambdaEntries?: string[];
+  app?: App;
+};
+
+export async function buildStack({
+  app,
+  lambdaEntries,
+}: BuildStackOptions = {}) {
   loadEnv();
 
   let entries = lambdaEntries;
@@ -36,7 +44,7 @@ export async function buildStack(lambdaEntries?: string[]) {
 
   const outputs = await build(entries);
 
-  const cdkApp = new App();
+  const cdkApp = app ?? new App();
 
   return {
     cdkApp,

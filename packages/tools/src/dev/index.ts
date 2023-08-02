@@ -41,7 +41,7 @@ function createApiServer(lambdas: LambdaOutput[]) {
   });
 }
 
-type DevOptions = {
+export type DevOptions = {
   lambdaEntries?: string[];
   quiet?: boolean;
 };
