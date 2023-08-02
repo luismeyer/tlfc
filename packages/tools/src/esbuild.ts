@@ -1,11 +1,11 @@
 import esbuild from "esbuild";
-import path from "path";
 import fs from "fs";
+import path from "path";
 
+import { AnyLambda } from "./any-lambda";
 import { handlerFileName } from "./create-lambda-function";
-import { EsbuildPlugin } from "./esbuild-plugin";
-import { AnyLambda } from ".";
 import { log } from "./dev/log";
+import { esbuildPluginTlfc } from "./esbuild-plugin";
 import { importLambdaDefinition } from "./import-lambda-definition";
 
 export type LambdaOutput = {
@@ -40,7 +40,7 @@ function createBuildOptions(
     format: "cjs",
     logLevel: "error",
     treeShaking: true,
-    plugins: [EsbuildPlugin],
+    plugins: [esbuildPluginTlfc({ ignoreEntry: true, includeAwsSdk: true })],
   };
 }
 

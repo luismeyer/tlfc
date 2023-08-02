@@ -8,6 +8,12 @@ const LambdaHandlerRegex = /createLambda\(.*{.*}(,.*)\);/ms;
 const LambdaEnvVarsRegex = /envVariables(:.*\[.*\])?,?/ms;
 
 export function parseServerCode(serverCode: string) {
+  // replace all server code
+  const hasServerImport = serverCode.includes(ServerImportLiteral);
+  if (!hasServerImport) {
+    return;
+  }
+
   // replace the import literals
   let clienCode = serverCode.replaceAll(
     ServerImportLiteral,
