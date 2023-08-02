@@ -1,7 +1,13 @@
 import { z, ZodObject, ZodRawShape } from "zod";
 
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
-import { devLog, LambdaCall, LambdaOptions, readConfig } from "@tlfc/core";
+import {
+  createLambdaFunctionName,
+  devLog,
+  LambdaCall,
+  LambdaOptions,
+  readConfig,
+} from "@tlfc/core";
 
 function createLambdaClient() {
   const { invoke } = readConfig();
@@ -26,9 +32,11 @@ function createSdkCall<
   return async function (request: z.infer<RequestSchema>) {
     devLog(`AWS-sdk invoking lambda ${functionName}`);
 
+    const { VERSION } = process.env;
+
     const result = await client.send(
       new InvokeCommand({
-        FunctionName: functionName,
+        FunctionName: createLambdaFunctionName(functionName, VERSION),
         InvocationType: "RequestResponse",
         Payload: Buffer.from(JSON.stringify(request)),
       })

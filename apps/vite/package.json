@@ -6,7 +6,7 @@
     "build": "vite build",
     "compile": "tsc --build",
     "compile:watch": "tsc --build --watch --preserveWatchOutput",
-    "deploy": "tlfc deploy",
+    "deploy": "tlfc deploy -v vite-example",
     "dev": "vite",
     "serve": "vite serve"
   },

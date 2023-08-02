@@ -1,35 +1,44 @@
 import { App, Stack } from "aws-cdk-lib";
 import { RestApi } from "aws-cdk-lib/aws-apigateway";
+import { Construct } from "constructs";
 
 import { createAwsLambdaFunction } from "./create-lambda-function";
+import { log } from "./dev/log";
 import { discoverLambdaEntries } from "./discover-lambda-entries";
 import { build, LambdaOutput } from "./esbuild";
 import { loadEnv } from "./load-env";
-import { log } from "./dev/log";
+import { DEFAULT_VERSION } from "@tlfc/core";
 
 class AwsStack extends Stack {
-  constructor(app: App, id: string, lambdas: LambdaOutput[]) {
+  constructor(app: Construct, version: string, lambdas: LambdaOutput[]) {
+    const stackId = "tlfc-stack";
+    const id = version ? [stackId, version].join("-") : stackId;
+
     super(app, id);
 
     log(`creating aws stack: '${id}'`);
 
-    const api = new RestApi(this, "tlfcApi", {
-      restApiName: "@tlfc Api",
+    const restApi = new RestApi(this, "tlfcApi", {
+      restApiName: `@tlfc Api ${version}`,
       description: "RestApi which holds all @tlfc endpoints",
     });
 
-    lambdas.forEach((lambda) => createAwsLambdaFunction(this, api, lambda));
+    lambdas.forEach((lambdaOutput) =>
+      createAwsLambdaFunction({ stack: this, restApi, lambdaOutput, version })
+    );
   }
 }
 
 export type BuildStackOptions = {
   lambdaEntries?: string[];
-  app?: App;
+  app?: Construct;
+  version?: string;
 };
 
 export async function buildStack({
   app,
   lambdaEntries,
+  version = DEFAULT_VERSION,
 }: BuildStackOptions = {}) {
   loadEnv();
 
@@ -48,6 +57,6 @@ export async function buildStack({
 
   return {
     cdkApp,
-    stack: new AwsStack(cdkApp, "tlfcStack", outputs),
+    stack: new AwsStack(cdkApp, version, outputs),
   };
 }
