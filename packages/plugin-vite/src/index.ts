@@ -1,6 +1,6 @@
 import { Plugin } from "vite";
 
-import { dev, parseServerCode, ServerImportLiteral } from "@tlfc/tools";
+import { dev, overrideAwsSdk, parseServerCode } from "@tlfc/tools";
 
 type VitePluginTlfcOptions = {
   includeAwsSdk?: boolean;
@@ -49,23 +49,18 @@ export function vitePluginTlfc(
 
     async transform(code, id) {
       // omit aws-sdk from the bundle
-      if (!includeAwsSdk && id.includes("@aws-sdk/client-lambda")) {
-        // rewrite the imports we use in the create-sdk-call.ts file
-        return `
-          export const InvokeCommand = null;
-          export const LambdaClient = null;
-          export default null;
-        `;
+      const awsSdk = overrideAwsSdk(id, includeAwsSdk);
+      if (awsSdk) {
+        return awsSdk;
       }
 
       if (id.includes("node_modules")) {
         return;
       }
 
-      // replace all server code
-      const hasServerImport = code.includes(ServerImportLiteral);
-      if (hasServerImport) {
-        return parseServerCode(code);
+      const serverCode = parseServerCode(code);
+      if (serverCode) {
+        return serverCode;
       }
     },
   };

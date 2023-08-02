@@ -65,7 +65,7 @@ export async function dev({ lambdaEntries, quiet }: DevOptions) {
 
   let isExiting = false;
 
-  const handleExit = async () => {
+  return async () => {
     if (isExiting) {
       return;
     }
@@ -84,16 +84,4 @@ export async function dev({ lambdaEntries, quiet }: DevOptions) {
 
     await Promise.all([invokePromise, apiPromise]);
   };
-
-  //catches ctrl+c event
-  process.on("SIGINT", handleExit);
-
-  // catches "kill pid" (for example: nodemon restart)
-  process.on("SIGUSR1", handleExit);
-  process.on("SIGUSR2", handleExit);
-
-  //catches uncaught exceptions
-  process.on("uncaughtException", handleExit);
-
-  return handleExit;
 }

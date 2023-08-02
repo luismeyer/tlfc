@@ -1,14 +1,13 @@
 {
-  "name": "@tlfc/vite-example",
+  "name": "@tlfc/esbuild-example",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "node esbuild.mjs",
     "compile": "tsc --build",
     "compile:watch": "tsc --build --watch --preserveWatchOutput",
     "deploy": "tlfc deploy",
-    "dev": "vite",
-    "serve": "vite serve"
+    "dev": "concurrently 'tlfc dev' 'node dev.mjs' 'node esbuild.mjs --watch'"
   },
   "dependencies": {
     "@tlfc/client": "*",
@@ -17,9 +16,10 @@
   },
   "devDependencies": {
     "@tlfc/cli": "*",
-    "@tlfc/vite": "*",
+    "@tlfc/esbuild": "*",
     "@types/node": "^20.4.5",
-    "typescript": "^5.1.6",
-    "vite": "^4.4.0"
+    "concurrently": "^8.2.0",
+    "live-server": "^1.2.2",
+    "typescript": "^5.1.6"
   }
 }
