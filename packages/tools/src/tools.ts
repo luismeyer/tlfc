@@ -7,8 +7,10 @@ type Tools = {
 };
 
 export function tools(...lambdaEntries: string[]): Tools {
+  const options = { lambdaEntries };
+
   return {
-    buildStack: () => buildStack(lambdaEntries),
-    dev: () => dev({ lambdaEntries }),
+    buildStack: () => buildStack(options),
+    dev: () => dev(options),
   };
 }
