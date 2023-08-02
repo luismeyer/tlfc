@@ -1,5 +1,17 @@
 # @tlfc/tools
 
+## 1.6.0
+
+### Minor Changes
+
+- 250316e: release esbuild plugin as npm package
+- 269e8fa: migrate to esm only
+
+### Patch Changes
+
+- Updated dependencies [269e8fa]
+  - @tlfc/core@1.5.0
+
 ## 1.5.0
 
 ### Minor Changes
