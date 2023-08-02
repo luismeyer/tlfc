@@ -1,5 +1,17 @@
 # @tlfc/cli
 
+## 1.3.0
+
+### Minor Changes
+
+- 269e8fa: migrate to esm only
+
+### Patch Changes
+
+- Updated dependencies [250316e]
+- Updated dependencies [269e8fa]
+  - @tlfc/tools@1.6.0
+
 ## 1.2.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @tlfc/core
 
+## 1.5.0
+
+### Minor Changes
+
+- 269e8fa: migrate to esm only
+
 ## 1.4.0
 
 ### Minor Changes

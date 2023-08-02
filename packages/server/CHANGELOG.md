@@ -1,5 +1,16 @@
 # @tlfc/server
 
+## 1.5.0
+
+### Minor Changes
+
+- 269e8fa: migrate to esm only
+
+### Patch Changes
+
+- Updated dependencies [269e8fa]
+  - @tlfc/core@1.5.0
+
 ## 1.4.0
 
 ### Minor Changes
