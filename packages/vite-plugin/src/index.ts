@@ -2,47 +2,49 @@ import { Plugin } from "vite";
 
 import { dev, parseServerCode, ServerImportLiteral } from "@tlfc/tools";
 
-let stopTlfcDev: () => Promise<void> | undefined;
-
 type VitePluginTlfcOptions = {
   includeAwsSdk?: boolean;
   quiet?: boolean;
   disableDevServer?: boolean;
 };
 
-async function startTlfcDev(quiet?: boolean) {
-  if (stopTlfcDev) {
-    await stopTlfcDev();
-  }
-
-  stopTlfcDev = await dev({ quiet });
-}
-
 export function vitePluginTlfc(
   options: VitePluginTlfcOptions | undefined
 ): Plugin {
   const { includeAwsSdk, disableDevServer, quiet } = options || {};
 
+  let isDevMode = false;
+
+  let stopServer: () => Promise<void> | undefined;
+
   return {
     name: "vite-plugin-tlfc",
     enforce: "pre",
 
-    configureServer() {
-      if (disableDevServer) {
-        return;
-      }
-
-      // don't await so we don't block vite from starting
-      startTlfcDev(quiet);
+    async configureServer() {
+      isDevMode = true;
     },
 
-    configurePreviewServer() {
-      if (disableDevServer) {
+    // is invoked when the vite server is started
+    async buildStart() {
+      if (!isDevMode || disableDevServer) {
         return;
       }
 
-      // don't await so we don't block vite from starting
-      startTlfcDev(quiet);
+      if (stopServer) {
+        stopServer();
+      }
+
+      stopServer = await dev({ quiet });
+    },
+
+    // is invoked when the vite server is stopped
+    async buildEnd() {
+      if (!stopServer) {
+        return;
+      }
+
+      await stopServer();
     },
 
     async transform(code, id) {
