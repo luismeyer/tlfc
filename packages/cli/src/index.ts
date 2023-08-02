@@ -14,6 +14,7 @@ program
 
 type CommandOptions = {
   entries?: string[];
+  version?: string;
 };
 
 program
@@ -30,16 +31,24 @@ program
   .command(BuildStackCommand)
   .description("Build cdk stack.")
   .option("-e, --entries [files...]", "specify entry files")
-  .action(async ({ entries }: CommandOptions) => {
-    await buildStack({ lambdaEntries: entries });
+  .option("-v, --version <string>", "specify stack version")
+  .action(async ({ entries, version }: CommandOptions) => {
+    await buildStack({ lambdaEntries: entries, version });
   });
 
 program
   .command("deploy")
   .description("Deploying cdk stack.")
-  .action(() => {
+  .option("-e, --entries [files...]", "specify entry files")
+  .option("-v, --version <string>", "specify stack version")
+  .action(({ entries, version }: CommandOptions) => {
+    const versionFlag = version ? `-v ${version}` : "";
+    const entriesFlag = entries?.map((entry) => `-e ${entry}`).join(" ") ?? "";
+
+    const buildCommand = `tlfc ${BuildStackCommand} ${versionFlag} ${entriesFlag}`;
+
     const child = exec(
-      `cdk deploy --require-approval 'never' --app 'tlfc ${BuildStackCommand}'`
+      `cdk deploy --require-approval 'never' --app '${buildCommand}'`
     );
 
     child.stdout?.pipe(process.stdout);

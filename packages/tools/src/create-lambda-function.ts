@@ -1,22 +1,33 @@
-import { Stack } from "aws-cdk-lib";
+import { Construct } from "constructs";
 import { Cors, LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 
 import { LambdaOutput } from "./esbuild";
 import { log } from "./dev/log";
+import { createLambdaFunctionName } from "@tlfc/core";
 
 export const handlerFileName = "index";
 const handler = `${handlerFileName}.default.handler`;
 
-export const createAwsLambdaFunction = (
-  stack: Stack,
-  restApi: RestApi,
-  { definition, uploadDir }: LambdaOutput
-) => {
+type CreateAwsLambdaFunctionOptions = {
+  stack: Construct;
+  restApi: RestApi;
+  lambdaOutput: LambdaOutput;
+  version: string;
+};
+
+export const createAwsLambdaFunction = ({
+  stack,
+  restApi,
+  lambdaOutput: { definition, uploadDir },
+  version,
+}: CreateAwsLambdaFunctionOptions) => {
   const { functionName, envVariables, endpointType, httpDisabled } = definition;
 
-  log(`creating aws lambda function: '${functionName}'`);
+  const name = createLambdaFunctionName(functionName, version);
+
+  log(`creating aws lambda function: '${name}'`);
 
   const environment = envVariables.reduce(
     (acc, envVar) => ({
@@ -26,15 +37,16 @@ export const createAwsLambdaFunction = (
     {}
   );
 
-  const awsLambda = new Function(stack, functionName, {
+  const awsLambda = new Function(stack, name, {
     runtime: Runtime.NODEJS_18_X,
-    functionName,
+    functionName: name,
     handler,
     code: Code.fromAsset(uploadDir),
     environment: {
       ...environment,
       // tell the aws-sdk to not use the local config
       LAMBDA_ENV: "cloud",
+      VERSION: version,
     },
   });
 
