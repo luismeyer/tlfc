@@ -1,5 +1,16 @@
 # @tlfc/cli
 
+## 1.4.0
+
+### Minor Changes
+
+- b8802dc: enable multi stack deployments
+
+### Patch Changes
+
+- Updated dependencies [b8802dc]
+  - @tlfc/tools@1.7.0
+
 ## 1.3.0
 
 ### Minor Changes

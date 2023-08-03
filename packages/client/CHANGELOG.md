@@ -1,5 +1,16 @@
 # @tlfc/client
 
+## 1.5.0
+
+### Minor Changes
+
+- b8802dc: enable multi stack deployments
+
+### Patch Changes
+
+- Updated dependencies [b8802dc]
+  - @tlfc/core@1.6.0
+
 ## 1.4.0
 
 ### Minor Changes
