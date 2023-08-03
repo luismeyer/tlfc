@@ -9,6 +9,8 @@
     "build": "turbo build",
     "build:watch": "turbo build:watch",
     "changeset": "changeset",
+    "ci:publish": "npm run compile && npm run build && npx changeset publish",
+    "ci:version": "npx changeset version && npm install",
     "compile": "turbo compile",
     "compile:watch": "turbo compile:watch",
     "dev": "turbo dev"
