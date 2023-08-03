@@ -1,5 +1,11 @@
 # @tlfc/core
 
+## 1.6.0
+
+### Minor Changes
+
+- b8802dc: enable multi stack deployments
+
 ## 1.5.0
 
 ### Minor Changes
