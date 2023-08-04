@@ -46,11 +46,11 @@ function createBuildOptions(
 
 function validateEntry(entry: string) {
   if (!entry.trim().length) {
-    throw new Error("@tlfc Error: Received empty string as entry file.");
+    throw new Error("@tlfc: Received empty string as entry file.");
   }
 
   if (!fs.existsSync(entry)) {
-    throw new Error(`@tlfc Error: Entry file '${entry}' does not exist.`);
+    throw new Error(`@tlfc: Entry file '${entry}' does not exist.`);
   }
 }
 
