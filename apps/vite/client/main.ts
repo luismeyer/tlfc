@@ -1,6 +1,6 @@
 import { configure } from "@tlfc/client";
 
-import greetingLambda from "../server/greeting-lambda";
+import greetingLambda from "../lambda/greeting-lambda";
 
 configure(import.meta.env.VITE_TLFC_API_PATH);
 
