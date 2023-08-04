@@ -7,18 +7,19 @@
   ],
   "scripts": {
     "build": "turbo build",
-    "build:watch": "turbo build:watch",
+    "build:watch": "turbo --concurrency 11 build:watch",
     "changeset": "changeset",
-    "ci:publish": "npm run compile && npm run build && npx changeset publish",
-    "ci:version": "npx changeset version && npm install",
+    "ci:publish": "pnpm compile && pnpm build && changeset publish",
+    "ci:version": "changeset version && pnpm install",
     "compile": "turbo compile",
-    "compile:watch": "turbo compile:watch",
-    "dev:docs": "npm run -w @tlfc/docs dev",
-    "dev:esbuild": "npm run -w @tlfc/esbuild-example dev",
-    "dev:vite": "npm run -w @tlfc/vite-example dev"
+    "compile:watch": "turbo --concurrency 11 compile:watch",
+    "dev:docs": "pnpm --filter @tlfc/docs dev",
+    "dev:esbuild": "pnpm --filter @tlfc/esbuild-example dev",
+    "dev:vite": "pnpm --filter @tlfc/vite-example dev"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
-    "turbo": "^1.10.12"
+    "turbo": "^1.10.12",
+    "esbuild": "^0.18.11"
   }
 }
