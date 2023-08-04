@@ -16,21 +16,26 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Setup Node.js 16.x
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
-          version: npm run ci:version
-          publish: npm run ci:publish
+          version: pnpm ci:version
+          publish: pnpm ci:publish
           commit: "chore(release): changesets versioning & publication"
           title: "Changesets: Versioning & Publication"
           createGithubReleases: true

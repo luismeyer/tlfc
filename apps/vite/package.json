@@ -13,6 +13,7 @@
   "dependencies": {
     "@tlfc/client": "*",
     "@tlfc/server": "*",
+    "@tlfc/core": "*",
     "zod": "^3.21.4"
   },
   "devDependencies": {
