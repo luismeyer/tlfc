@@ -12,7 +12,7 @@ const watch = args.includes("--watch");
  */
 const options = {
   entryPoints: ["client/main.ts"],
-  outfile: "build/client.js",
+  outfile: "dist/client.js",
   format: "esm",
   platform: "browser",
   bundle: true,
