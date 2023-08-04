@@ -7,7 +7,7 @@
     "noEmit": true,
     "emitDeclarationOnly": false
   },
-  "include": ["./client", "./server"],
+  "include": ["client", "lambda"],
   "references": [
     { "path": "../../packages/client" },
     { "path": "../../packages/server" },
