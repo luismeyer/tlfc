@@ -1,8 +1,10 @@
 import { Application } from "express";
 import { ZodObject, ZodRawShape } from "zod";
 
-import { invokeLambda } from "./invoke-lambda";
+import { createLambdaFunctionName } from "@tlfc/core";
+
 import { LambdaOutput } from "../esbuild";
+import { invokeLambda } from "./invoke-lambda";
 import { log } from "./log";
 
 export function registerInvokeRoute<
@@ -22,7 +24,9 @@ export function registerInvokeRoute<
 
     try {
       const lambda = functions.find(
-        (lambda) => lambda.definition.functionName === params.functionName
+        (lambda) =>
+          createLambdaFunctionName(lambda.definition.functionName) ===
+          params.functionName
       );
 
       if (!lambda) {
