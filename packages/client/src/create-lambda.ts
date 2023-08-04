@@ -16,7 +16,11 @@ export function createLambda<
 >(
   options: LambdaOptions<RequestSchema, ResponseSchema>
 ): Lambda<RequestSchema, ResponseSchema> {
-  const { functionName, endpointType, httpDisabled } = options;
+  const {
+    endpointType = DefaultEndpointType,
+    functionName,
+    httpDisabled = false,
+  } = options;
 
   let call: LambdaCall<RequestSchema, ResponseSchema> | undefined;
 
@@ -32,20 +36,20 @@ export function createLambda<
 
   if (!call) {
     throw new Error(
-      "@tlfc Error: Cannot create lambda call. Are you trying to call a lambda from the browser but set 'httpDisabled' to true."
+      "@tlfc: Cannot create lambda call. Are you trying to call a lambda from the browser but set 'httpDisabled' to true?"
     );
   }
 
   return {
-    functionName: functionName,
-    handler: () => {
-      throw new Error(
-        "@tlfc Error: Cannot register lambda handler on the client"
-      );
-    },
     call,
-    endpointType: endpointType ?? DefaultEndpointType,
-    envVariables: options?.envVariables ?? [],
-    httpDisabled: Boolean(httpDisabled),
+    endpointType,
+    get envVariables(): string[] {
+      throw new Error("@tlfc: Cannot access envVariables on the client");
+    },
+    functionName,
+    handler: () => {
+      throw new Error("@tlfc: Cannot register lambda handler on the client");
+    },
+    httpDisabled,
   };
 }
