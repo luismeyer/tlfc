@@ -44,7 +44,7 @@ function createSdkCall<
 
     if (!result.Payload) {
       throw new Error(
-        `@tlfc Error: Invoke Lambda error, missing response payload: ${result.FunctionError}`
+        `@tlfc: Invoke Lambda error, missing response payload: ${result.FunctionError}`
       );
     }
 
