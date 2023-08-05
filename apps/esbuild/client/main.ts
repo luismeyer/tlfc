@@ -12,7 +12,7 @@ if (!response) {
 }
 
 button.addEventListener("click", async () => {
-  const { result } = await calcLambda.call({ a: 1, b: 2 });
+  const { result } = await calcLambda.call({});
 
   response.innerHTML = `${result}`;
 });

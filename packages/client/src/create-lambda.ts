@@ -1,18 +1,19 @@
-import { ZodObject, ZodRawShape } from "zod";
-
 import {
   DefaultEndpointType,
+  RequiredSchemaBase,
   Lambda,
-  LambdaCall,
+  LambdaFunction,
   LambdaOptions,
+  OptionalSchemaBase,
+  UndefinedSchemaBase,
 } from "@tlfc/core";
 
-import { createLambdaFetchCall } from "./create-fetch-call";
-import { createLambdaSdkCall } from "./create-sdk-call";
+import { createFetchCall } from "./create-fetch-call";
+import { createSdkCall } from "./create-sdk-call";
 
 export function createLambda<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
+  RequestSchema extends OptionalSchemaBase = UndefinedSchemaBase,
+  ResponseSchema extends RequiredSchemaBase = RequiredSchemaBase
 >(
   options: LambdaOptions<RequestSchema, ResponseSchema>
 ): Lambda<RequestSchema, ResponseSchema> {
@@ -20,18 +21,19 @@ export function createLambda<
     endpointType = DefaultEndpointType,
     functionName,
     httpDisabled = false,
+    responseSchema,
   } = options;
 
-  let call: LambdaCall<RequestSchema, ResponseSchema> | undefined;
+  let call: LambdaFunction<RequestSchema, ResponseSchema> | undefined;
 
   const isBrowser = typeof window !== "undefined";
 
   if (!httpDisabled && isBrowser) {
-    call = createLambdaFetchCall(options);
+    call = createFetchCall(responseSchema, functionName, endpointType);
   }
 
   if (!isBrowser) {
-    call = createLambdaSdkCall(options);
+    call = createSdkCall(responseSchema, functionName);
   }
 
   if (!call) {

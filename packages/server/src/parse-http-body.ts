@@ -1,4 +1,7 @@
-import { z, ZodObject, ZodRawShape } from "zod";
+import { z } from "zod";
+
+import { SchemaType, OptionalSchemaBase } from "@tlfc/core";
+
 import { ParseError } from "./event-parse-error";
 
 const HttpEvent = z.object({
@@ -6,10 +9,10 @@ const HttpEvent = z.object({
   isBase64Encoded: z.optional(z.boolean()),
 });
 
-export function parseHttpBody<RequestSchema extends ZodObject<ZodRawShape>>(
+export function parseHttpBody<RequestSchema extends OptionalSchemaBase>(
   event: unknown,
   requestSchema: RequestSchema
-): z.TypeOf<RequestSchema> {
+): SchemaType<RequestSchema> {
   const eventParseResult = HttpEvent.parse(event);
 
   let { body, isBase64Encoded } = eventParseResult;

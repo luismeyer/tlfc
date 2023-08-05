@@ -4,12 +4,19 @@ import type { APIGatewayProxyHandler } from "aws-lambda";
 
 export type EndpointType = "GET" | "POST";
 
+export type RequiredSchemaBase = ZodObject<ZodRawShape>;
+
+export type UndefinedSchemaBase = ZodObject<{}>;
+
+export type OptionalSchemaBase = RequiredSchemaBase | UndefinedSchemaBase;
+
 export type LambdaOptions<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
+  RequestSchema extends OptionalSchemaBase,
+  ResponseSchema extends RequiredSchemaBase
 > = {
-  requestSchema: RequestSchema;
+  requestSchema?: RequestSchema;
   responseSchema: ResponseSchema;
+
   /**
    * Unique identifier of the lambda. This has to be unique across your AWS account.
    * This will be used as the Gateway Path and as the lambda name in AWS.
@@ -34,34 +41,26 @@ export type LambdaOptions<
 };
 
 export type Lambda<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
+  RequestSchema extends OptionalSchemaBase,
+  ResponseSchema extends RequiredSchemaBase
 > = {
+  // client side code
+  call: LambdaFunction<RequestSchema, ResponseSchema>;
+
   // the functionName identifies the location where the lambda can be invoked
   functionName: string;
 
   // server side code
   handler: APIGatewayProxyHandler;
 
-  // client side code
-  call: LambdaCall<RequestSchema, ResponseSchema>;
-
   endpointType: EndpointType;
   envVariables: string[];
   httpDisabled: boolean;
 };
 
-type LambdaFunction<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
-> = (request: z.infer<RequestSchema>) => Promise<z.infer<ResponseSchema>>;
+export type SchemaType<Schema extends OptionalSchemaBase> = z.infer<Schema>;
 
-export type LambdaCall<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
-> = LambdaFunction<RequestSchema, ResponseSchema>;
-
-export type LambdaHandler<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
-> = LambdaFunction<RequestSchema, ResponseSchema>;
+export type LambdaFunction<
+  RequestSchema extends OptionalSchemaBase,
+  ResponseSchema extends RequiredSchemaBase
+> = (request: SchemaType<RequestSchema>) => Promise<z.infer<ResponseSchema>>;

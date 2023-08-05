@@ -1,12 +1,11 @@
-import { z, ZodObject, ZodRawShape } from "zod";
-
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import {
   createLambdaFunctionName,
   devLog,
-  LambdaCall,
-  LambdaOptions,
+  LambdaFunction,
   readConfig,
+  OptionalSchemaBase,
+  RequiredSchemaBase,
 } from "@tlfc/core";
 
 function createLambdaClient() {
@@ -18,18 +17,18 @@ function createLambdaClient() {
   return new LambdaClient({ endpoint });
 }
 
-function createSdkCall<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
+export function createSdkCall<
+  RequestSchema extends OptionalSchemaBase,
+  ResponseSchema extends RequiredSchemaBase
 >(
   responseSchema: ResponseSchema,
   functionName: string
-): LambdaCall<RequestSchema, ResponseSchema> {
+): LambdaFunction<RequestSchema, ResponseSchema> {
   devLog(`Creating call with AWS for ${functionName}`);
 
   const client = createLambdaClient();
 
-  return async function (request: z.infer<RequestSchema>) {
+  return async function (request) {
     devLog(`AWS-sdk invoking lambda ${functionName}`);
 
     const { VERSION } = process.env;
@@ -59,22 +58,5 @@ function createSdkCall<
     }
 
     return parseResult.data;
-  };
-}
-
-export function createLambdaSdkCall<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
->({
-  functionName,
-  responseSchema,
-}: LambdaOptions<RequestSchema, ResponseSchema>): LambdaCall<
-  RequestSchema,
-  ResponseSchema
-> {
-  return function (request: z.infer<RequestSchema>) {
-    const call = createSdkCall(responseSchema, functionName);
-
-    return call(request);
   };
 }

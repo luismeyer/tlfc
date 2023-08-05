@@ -1,4 +1,7 @@
-import { z, ZodObject, ZodRawShape } from "zod";
+import { z } from "zod";
+
+import { SchemaType, OptionalSchemaBase } from "@tlfc/core";
+
 import { ParseError } from "./event-parse-error";
 
 const HttpGetEvent = z.object({
@@ -28,10 +31,10 @@ function preParseQuery(
   return result;
 }
 
-export function parseHttpQuery<RequestSchema extends ZodObject<ZodRawShape>>(
+export function parseHttpQuery<RequestSchema extends OptionalSchemaBase>(
   event: unknown,
   requestSchema: RequestSchema
-): z.TypeOf<RequestSchema> {
+): SchemaType<RequestSchema> {
   const eventParseResult = HttpGetEvent.parse(event);
 
   const query = preParseQuery(eventParseResult.queryStringParameters);

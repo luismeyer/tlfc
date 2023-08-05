@@ -1,17 +1,15 @@
-import { z, ZodObject, ZodRawShape } from "zod";
-
-import { EndpointType } from "@tlfc/core";
+import { EndpointType, SchemaType, OptionalSchemaBase } from "@tlfc/core";
 
 import { EventParseError } from "./event-parse-error";
 import { parseHttpBody } from "./parse-http-body";
 import { parseHttpQuery } from "./parse-http-query";
 import { parseSdkEvent } from "./parse-sdk-event";
 
-export function parseEvent<RequestSchema extends ZodObject<ZodRawShape>>(
+export function parseEvent<RequestSchema extends OptionalSchemaBase>(
   event: unknown,
   requestSchema: RequestSchema,
   endpointType: EndpointType
-): z.TypeOf<RequestSchema> {
+): SchemaType<RequestSchema> {
   const eventParseError = new EventParseError();
 
   try {

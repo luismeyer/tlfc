@@ -1,17 +1,16 @@
-import { z, ZodObject, ZodRawShape } from "zod";
-
 import {
-  DefaultEndpointType,
   devLog,
   EndpointType,
-  LambdaCall,
-  LambdaOptions,
+  LambdaFunction,
   readConfig,
+  SchemaType,
+  OptionalSchemaBase,
+  RequiredSchemaBase,
 } from "@tlfc/core";
 
-function createUrl<RequestSchema extends ZodObject<ZodRawShape>>(
+function createUrl<RequestSchema extends OptionalSchemaBase>(
   functionName: string,
-  request: z.infer<RequestSchema>,
+  request: SchemaType<RequestSchema>,
   endpointType: EndpointType
 ): string {
   const { api } = readConfig();
@@ -28,8 +27,8 @@ function createUrl<RequestSchema extends ZodObject<ZodRawShape>>(
   return url.toString();
 }
 
-function createBody<RequestSchema extends ZodObject<ZodRawShape>>(
-  request: z.infer<RequestSchema>,
+function createBody<RequestSchema extends OptionalSchemaBase>(
+  request: SchemaType<RequestSchema>,
   endpointType: EndpointType
 ): string | undefined {
   if (endpointType !== "POST") {
@@ -39,17 +38,17 @@ function createBody<RequestSchema extends ZodObject<ZodRawShape>>(
   return JSON.stringify(request);
 }
 
-function createFetchCall<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
+export function createFetchCall<
+  RequestSchema extends OptionalSchemaBase,
+  ResponseSchema extends RequiredSchemaBase
 >(
   responseSchema: ResponseSchema,
   functionName: string,
   endpointType: EndpointType
-): LambdaCall<RequestSchema, ResponseSchema> {
+): LambdaFunction<RequestSchema, ResponseSchema> {
   devLog(`Creating call with Fetch for ${functionName}`);
 
-  return async function (request: z.infer<RequestSchema>) {
+  return async function (request) {
     devLog(`Fetch invoking lambda`);
 
     const url = createUrl(functionName, request, endpointType);
@@ -69,23 +68,5 @@ function createFetchCall<
     }
 
     return responseSchema.parse(response);
-  };
-}
-
-export function createLambdaFetchCall<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
->({
-  functionName,
-  responseSchema,
-  endpointType = DefaultEndpointType,
-}: LambdaOptions<RequestSchema, ResponseSchema>): LambdaCall<
-  RequestSchema,
-  ResponseSchema
-> {
-  return function (request: z.infer<RequestSchema>) {
-    const call = createFetchCall(responseSchema, functionName, endpointType);
-
-    return call(request);
   };
 }
