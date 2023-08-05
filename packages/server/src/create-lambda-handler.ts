@@ -1,25 +1,27 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { z, ZodObject, ZodRawShape } from "zod";
 
 import {
   DefaultEndpointType,
   devLog,
-  LambdaHandler,
+  LambdaFunction,
   LambdaOptions,
+  OptionalSchemaBase,
+  RequiredSchemaBase,
+  SchemaType,
 } from "@tlfc/core";
 
+import { EventParseError } from "./event-parse-error";
 import {
   createLambdaErrorResponse,
   createLambdaSuccessResponse,
 } from "./lambda-response";
 import { parseEvent } from "./parse-event";
-import { EventParseError } from "./event-parse-error";
 
 export function createLambdaHandler<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
+  RequestSchema extends OptionalSchemaBase,
+  ResponseSchema extends RequiredSchemaBase
 >(
-  handler: LambdaHandler<RequestSchema, ResponseSchema>,
+  handler: LambdaFunction<RequestSchema, ResponseSchema>,
   {
     functionName,
     requestSchema,
@@ -35,10 +37,14 @@ export function createLambdaHandler<
       throw new Error("Lambda Event missing");
     }
 
-    let payload: z.TypeOf<RequestSchema>;
+    let payload: SchemaType<RequestSchema>;
 
     try {
-      payload = parseEvent(event, requestSchema, endpointType);
+      if (requestSchema) {
+        payload = parseEvent(event, requestSchema, endpointType);
+      } else {
+        payload = {};
+      }
     } catch (error) {
       if (error instanceof EventParseError) {
         return createLambdaErrorResponse(error.response);

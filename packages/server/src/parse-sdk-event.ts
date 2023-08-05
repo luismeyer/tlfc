@@ -1,10 +1,11 @@
-import { z, ZodObject, ZodRawShape } from "zod";
+import { SchemaType, OptionalSchemaBase } from "@tlfc/core";
+
 import { ParseError } from "./event-parse-error";
 
-export function parseSdkEvent<RequestSchema extends ZodObject<ZodRawShape>>(
+export function parseSdkEvent<RequestSchema extends OptionalSchemaBase>(
   event: unknown,
   requestSchema: RequestSchema
-): z.TypeOf<RequestSchema> {
+): SchemaType<RequestSchema> {
   const result = requestSchema.safeParse(event);
 
   if (!result.success) {

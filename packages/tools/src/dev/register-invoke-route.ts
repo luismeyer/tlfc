@@ -1,15 +1,18 @@
 import { Application } from "express";
-import { ZodObject, ZodRawShape } from "zod";
 
-import { createLambdaFunctionName } from "@tlfc/core";
+import {
+  OptionalSchemaBase,
+  RequiredSchemaBase,
+  createLambdaFunctionName,
+} from "@tlfc/core";
 
 import { LambdaOutput } from "../esbuild";
 import { invokeLambda } from "./invoke-lambda";
 import { log } from "./log";
 
 export function registerInvokeRoute<
-  RequestSchema extends ZodObject<ZodRawShape>,
-  ResponseSchema extends ZodObject<ZodRawShape>
+  RequestSchema extends OptionalSchemaBase,
+  ResponseSchema extends RequiredSchemaBase
 >(app: Application, functions: LambdaOutput[]) {
   const path = "/2015-03-31/functions/:functionName/invocations";
 
