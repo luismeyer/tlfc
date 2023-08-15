@@ -17,7 +17,7 @@ Write typesafe AWS lambda functions with:
 
 ## How it works
 
-### A working vite example can be found in the [example app](./apps/vite/readme.md)
+### A working vite example can be found in the [example app package](./apps/vite/readme.md) or [deployed here](https://tlfc-example.vercel.app/).
 
 ### Simple lambda definition and implementation
 
