@@ -8,7 +8,9 @@ const button = document.getElementById("button")!;
 const title = document.getElementById("title")!;
 
 async function handleClick() {
-  const response = await greetingLambda.call({ name: "test", disabled: false });
+  const response = await greetingLambda.call({
+    name: "test",
+  });
 
   title.innerText = response.message;
 }

@@ -13,7 +13,9 @@
     "ci:version": "npx changeset version && npm install",
     "compile": "turbo compile",
     "compile:watch": "turbo compile:watch",
-    "dev": "turbo dev"
+    "dev:docs": "npm run -w @tlfc/docs dev",
+    "dev:esbuild": "npm run -w @tlfc/esbuild-example dev",
+    "dev:vite": "npm run -w @tlfc/vite-example dev"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",

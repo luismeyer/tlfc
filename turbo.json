@@ -22,10 +22,6 @@
       "outputs": ["lib/**"],
       "cache": false,
       "persistent": true
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
     }
   }
 }
