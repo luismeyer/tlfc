@@ -4,11 +4,11 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["src/**/*", "vite.config.js", "esbuild.mjs"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "out/**"]
     },
     "build:watch": {
       "inputs": ["src/**/*.ts", "vite.config.js", "esbuild.mjs"],
-      "outputs": ["dist/**"],
+      "outputs": ["dist/**", "out/**"],
       "cache": false,
       "persistent": true
     },
