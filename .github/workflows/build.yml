@@ -1,4 +1,4 @@
-name: Pull Requests
+name: Build
 
 on: pull_request
 
@@ -23,9 +23,6 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm install
-
-      - name: Compile
-        run: pnpm compile
 
       - name: Build
         run: pnpm build
