@@ -24,10 +24,7 @@ export default async function Home() {
             </Button>
           </a>
 
-          <a
-            href="https://www.npmjs.com/settings/tlfc/packages"
-            target="_blank"
-          >
+          <a href="https://www.npmjs.com/search?q=tlfc" target="_blank">
             <Button type="default" icon={<AppstoreOutlined />}>
               npm
             </Button>
