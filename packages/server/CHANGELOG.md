@@ -1,5 +1,17 @@
 # @tlfc/server
 
+## 1.6.0
+
+### Minor Changes
+
+- d0eac51: Lambdas without a request schema
+
+### Patch Changes
+
+- 6545537: Prevent env var access on the client
+- Updated dependencies [d0eac51]
+  - @tlfc/core@1.7.0
+
 ## 1.5.0
 
 ### Minor Changes

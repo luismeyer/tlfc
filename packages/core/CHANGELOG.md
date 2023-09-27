@@ -1,5 +1,11 @@
 # @tlfc/core
 
+## 1.7.0
+
+### Minor Changes
+
+- d0eac51: Lambdas without a request schema
+
 ## 1.6.0
 
 ### Minor Changes
